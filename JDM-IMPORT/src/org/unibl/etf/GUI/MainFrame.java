@@ -13,8 +13,45 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
+
 public class MainFrame extends JFrame {
-    private JPanel contentPane;
+    private static final String LOGOPATH = "./src/resources/img/JDM-LOGO.png";
+    private static final String ADDPATH = "./src/resources/img/Add.png";
+    private static final String DELETEPATH = "./src/resources/img/Delete.png";
+    private static final String UPDATEPATH = "./src/resources/img/Update.png";
+    private static final String CLEARPATH = "./src/resources/img/Clear.png";
+
+    private final Icon addIcon = new ImageIcon(ADDPATH);
+    private final Icon deleteIcon = new ImageIcon(DELETEPATH);
+    private final Icon updateIcon = new ImageIcon(UPDATEPATH);
+    private final Icon clearIcon = new ImageIcon(CLEARPATH);
+    private final JPanel contentPane;
+    private final JTable carsTable;
+    private final JTable ordersTable;
+    private final JTable customersTable;
+
+
+    private JTextField imageURLtextField;
+    private JTextField priceTextField;
+    private JTextField yearTextField;
+    private JTextField modelTextField;
+    private JTextField idTextField;
+    private JTextField brandTextField;
+
+
+
+
+    private JTextField nameTextField;
+    private JTextField SurnameTextField;
+    private JTextField emailTextField;
+    private JTextField phoneTextField;
+
+
+
+    private JTextField dateTextField;
+    private JTextField deliveryDateTextField;
+    private JTextField orderTotalTextField;
+    private JTextField quantityTextField;
 
     public void setButtonColor(JButton p) {
         p.setBackground(Color.RED);
@@ -46,7 +83,7 @@ public class MainFrame extends JFrame {
         contentPane.add(MenuPanel);
 
         try {
-            myPicture = ImageIO.read(new File("JDM-LOGO.png"));
+            myPicture = ImageIO.read(new File(LOGOPATH));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -142,23 +179,354 @@ public class MainFrame extends JFrame {
 
 
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-        tabbedPane.setBounds(195, 0, 789, 530);
+        tabbedPane.setBounds(195, -25, 789, 555);
         contentPane.add(tabbedPane);
 
         JPanel CarsTabbedPane = new JPanel();
         CarsTabbedPane.setBackground(new Color(81, 86, 88));
+        CarsTabbedPane.setLayout(null);
         tabbedPane.addTab("CARS", null, CarsTabbedPane, null);
 
 
+        // ---------------- CARS -----------------------
+        carsTable = new JTable();
+        JScrollPane carsTableScrollPane = new JScrollPane(carsTable);
+        carsTableScrollPane.setPreferredSize(new Dimension(740, 200));
+        carsTableScrollPane.setBounds(20,300,740, 200);
+        CarsTabbedPane.add(carsTableScrollPane);
+
+        JButton addCarButton = new JButton("Add");
+        addCarButton.setBackground(Color.GREEN);
+        addCarButton.setBounds(431, 63, 133, 58);
+        addCarButton.setIcon(addIcon);
+        addCarButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        addCarButton.setVerticalTextPosition(SwingConstants.CENTER);
+        CarsTabbedPane.add(addCarButton);
+
+        JButton updateCarButton = new JButton("Update");
+        updateCarButton.setBackground(new Color(30, 144, 255));
+        updateCarButton.setBounds(599, 63, 133, 58);
+        updateCarButton.setIcon(updateIcon);
+        updateCarButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        updateCarButton.setVerticalTextPosition(SwingConstants.CENTER);
+        CarsTabbedPane.add(updateCarButton);
+
+        JButton deleteCarButton = new JButton("Delete");
+        deleteCarButton.setBackground(Color.RED);
+        deleteCarButton.setBounds(431, 170, 133, 58);
+        deleteCarButton.setIcon(deleteIcon);
+        deleteCarButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        deleteCarButton.setVerticalTextPosition(SwingConstants.CENTER);
+        CarsTabbedPane.add(deleteCarButton);
+
+        JButton clearCarButton = new JButton("Clear");
+        clearCarButton.setBackground(Color.YELLOW);
+        clearCarButton.setBounds(599, 170, 133, 58);
+        clearCarButton.setIcon(clearIcon);
+        clearCarButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        clearCarButton.setVerticalTextPosition(SwingConstants.CENTER);
+        CarsTabbedPane.add(clearCarButton);
+
+        JLabel BrandLabel = new JLabel("Brand:");
+        BrandLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        BrandLabel.setForeground(Color.BLACK);
+        BrandLabel.setBounds(58, 83, 81, 14);
+        CarsTabbedPane.add(BrandLabel);
+
+        JLabel ModelLabel = new JLabel("Model:");
+        ModelLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        ModelLabel.setForeground(Color.BLACK);
+        ModelLabel.setBounds(58, 123, 52, 14);
+        CarsTabbedPane.add(ModelLabel);
+
+        JLabel YearLabel = new JLabel("Year:");
+        YearLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        YearLabel.setForeground(Color.BLACK);
+        YearLabel.setBounds(58, 159, 52, 23);
+        CarsTabbedPane.add(YearLabel);
+
+        JLabel PriceLabel = new JLabel("Price:");
+        PriceLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        PriceLabel.setForeground(Color.BLACK);
+        PriceLabel.setBounds(58, 204, 46, 14);
+        CarsTabbedPane.add(PriceLabel);
+
+        JLabel ImageURLLabel = new JLabel("ImageURL:");
+        ImageURLLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        ImageURLLabel.setForeground(Color.BLACK);
+        ImageURLLabel.setBounds(58, 241, 90, 14);
+        CarsTabbedPane.add(ImageURLLabel);
+
+        JLabel IDLabel = new JLabel("ID:");
+        IDLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        IDLabel.setForeground(Color.BLACK);
+        IDLabel.setBounds(58, 43, 62, 14);
+        CarsTabbedPane.add(IDLabel);
+
+        imageURLtextField = new JTextField();
+        imageURLtextField.setBounds(163, 237, 150, 30);
+        CarsTabbedPane.add(imageURLtextField);
+        imageURLtextField.setColumns(10);
+
+        priceTextField = new JTextField();
+        priceTextField.setColumns(10);
+        priceTextField.setBounds(163, 197, 150, 30);
+        CarsTabbedPane.add(priceTextField);
+
+        yearTextField = new JTextField();
+        yearTextField.setColumns(10);
+        yearTextField.setBounds(163, 157, 150, 30);
+        CarsTabbedPane.add(yearTextField);
+
+        modelTextField = new JTextField();
+        modelTextField.setColumns(10);
+        modelTextField.setBounds(163, 117, 150, 30);
+        CarsTabbedPane.add(modelTextField);
+
+        idTextField = new JTextField();
+        idTextField.setColumns(10);
+        idTextField.setBounds(163, 37, 150, 30);
+        CarsTabbedPane.add(idTextField);
+
+        brandTextField = new JTextField();
+        brandTextField.setColumns(10);
+        brandTextField.setBounds(163, 77, 150, 30);
+        CarsTabbedPane.add(brandTextField);
+
+
+
+
+        // ---------------- ORDERS -------------------------
+
         JPanel OrdersPanel = new JPanel();
+        OrdersPanel.setLayout(null);
         OrdersPanel.setBackground(new Color(81, 86, 88));
         tabbedPane.addTab("ORDERS", null, OrdersPanel, null);
 
+        ordersTable = new JTable();
+        JScrollPane ordersTableScrollPane = new JScrollPane(ordersTable);
+        ordersTableScrollPane.setPreferredSize(new Dimension(740, 200));
+        ordersTableScrollPane.setBounds(20,300,740, 200);
+        OrdersPanel.add(ordersTableScrollPane);
+
+        JButton addOrderButton = new JButton("Add");
+        addOrderButton.setBackground(Color.GREEN);
+        addOrderButton.setBounds(431, 63, 133, 58);
+        addOrderButton.setIcon(addIcon);
+        addOrderButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        addOrderButton.setVerticalTextPosition(SwingConstants.CENTER);
+        OrdersPanel.add(addOrderButton);
+
+        JButton updateOrderButton = new JButton("Update");
+        updateOrderButton.setBackground(new Color(30, 144, 255));
+        updateOrderButton.setBounds(599, 63, 133, 58);
+        updateOrderButton.setIcon(updateIcon);
+        updateOrderButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        updateOrderButton.setVerticalTextPosition(SwingConstants.CENTER);
+        OrdersPanel.add(updateOrderButton);
+
+        JButton deleteOrderButton = new JButton("Delete");
+        deleteOrderButton.setBackground(Color.RED);
+        deleteOrderButton.setBounds(431, 170, 133, 58);
+        deleteOrderButton.setIcon(deleteIcon);
+        deleteOrderButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        deleteOrderButton.setVerticalTextPosition(SwingConstants.CENTER);
+        OrdersPanel.add(deleteOrderButton);
+
+        JButton clearOrderButton = new JButton("Clear");
+        clearOrderButton.setBackground(Color.YELLOW);
+        clearOrderButton.setBounds(599, 170, 133, 58);
+        clearOrderButton.setIcon(clearIcon);
+        clearOrderButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        clearOrderButton.setVerticalTextPosition(SwingConstants.CENTER);
+        OrdersPanel.add(clearOrderButton);
+
+        JLabel DateLabel = new JLabel("Date:");
+        DateLabel.setForeground(Color.BLACK);
+        DateLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        DateLabel.setBounds(58, 119, 46, 14);
+        OrdersPanel.add(DateLabel);
+
+        dateTextField = new JTextField();
+        dateTextField.setColumns(10);
+        dateTextField.setBounds(163, 113, 150, 30);
+        OrdersPanel.add(dateTextField);
+
+        JLabel lblDeliveryDate = new JLabel("Delivery date:");
+        lblDeliveryDate.setForeground(Color.BLACK);
+        lblDeliveryDate.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblDeliveryDate.setBounds(58, 158, 99, 14);
+        OrdersPanel.add(lblDeliveryDate);
+
+        deliveryDateTextField = new JTextField();
+        deliveryDateTextField.setColumns(10);
+        deliveryDateTextField.setBounds(163, 152, 150, 30);
+        OrdersPanel.add(deliveryDateTextField);
+
+        JLabel lblOrderTotal = new JLabel("Order total:");
+        lblOrderTotal.setForeground(Color.BLACK);
+        lblOrderTotal.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblOrderTotal.setBounds(58, 242, 99, 14);
+        OrdersPanel.add(lblOrderTotal);
+
+        orderTotalTextField = new JTextField();
+        orderTotalTextField.setColumns(10);
+        orderTotalTextField.setBounds(163, 236, 150, 30);
+        OrdersPanel.add(orderTotalTextField);
+
+        JLabel lblNewLabel = new JLabel("Customer:");
+        lblNewLabel.setForeground(Color.BLACK);
+        lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblNewLabel.setBounds(58, 49, 99, 14);
+        OrdersPanel.add(lblNewLabel);
+
+        JLabel lblCar = new JLabel("Car:");
+        lblCar.setForeground(Color.BLACK);
+        lblCar.setFont(new Font("Tahoma", Font.BOLD, 14));
+        lblCar.setBounds(58, 82, 99, 14);
+        OrdersPanel.add(lblCar);
+
+        JComboBox carComboBox = new JComboBox();
+        carComboBox.setBounds(163, 80, 150, 22);
+        OrdersPanel.add(carComboBox);
+
+        JComboBox customerComboBox = new JComboBox();
+        customerComboBox.setBounds(163, 47, 150, 22);
+        OrdersPanel.add(customerComboBox);
+
+        JLabel QuantitiyLabel = new JLabel("Quantity:");
+        QuantitiyLabel.setForeground(Color.BLACK);
+        QuantitiyLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        QuantitiyLabel.setBounds(58, 200, 99, 14);
+        OrdersPanel.add(QuantitiyLabel);
+
+        quantityTextField = new JTextField();
+        quantityTextField.setColumns(10);
+        quantityTextField.setBounds(163, 193, 150, 30);
+        OrdersPanel.add(quantityTextField);
+
+
+        // ------------------- CUSTOMERS ---------------------------
 
         JPanel CustomersPanel = new JPanel();
+        CustomersPanel.setLayout(null);
         CustomersPanel.setBackground(new Color(81, 86, 88));
         tabbedPane.addTab("CUSTOMERS", null, CustomersPanel, null);
 
+        customersTable = new JTable();
+        JScrollPane customersTableScrollPane = new JScrollPane(customersTable);
+        customersTableScrollPane.setPreferredSize(new Dimension(740, 200));
+        customersTableScrollPane.setBounds(20,300,740, 200);
+        CustomersPanel.add(customersTableScrollPane);
+
+        JButton addCustomerButton = new JButton("Add");
+        addCustomerButton.setBackground(Color.GREEN);
+        addCustomerButton.setBounds(431, 63, 133, 58);
+        addCustomerButton.setIcon(addIcon);
+        addCustomerButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        addCustomerButton.setVerticalTextPosition(SwingConstants.CENTER);
+        CustomersPanel.add(addCustomerButton);
+
+        JButton updateCustomerButton = new JButton("Update");
+        updateCustomerButton.setBackground(new Color(30, 144, 255));
+        updateCustomerButton.setBounds(599, 63, 133, 58);
+        updateCustomerButton.setIcon(updateIcon);
+        updateCustomerButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        updateCustomerButton.setVerticalTextPosition(SwingConstants.CENTER);
+        CustomersPanel.add(updateCustomerButton);
+
+        JButton deleteCustomerButton = new JButton("Delete");
+        deleteCustomerButton.setBackground(Color.RED);
+        deleteCustomerButton.setBounds(431, 170, 133, 58);
+        deleteCustomerButton.setIcon(deleteIcon);
+        deleteCustomerButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        deleteCustomerButton.setVerticalTextPosition(SwingConstants.CENTER);
+        CustomersPanel.add(deleteCustomerButton);
+
+        JButton clearCustomerButton = new JButton("Clear");
+        clearCustomerButton.setBackground(Color.YELLOW);
+        clearCustomerButton.setBounds(599, 170, 133, 58);
+        clearCustomerButton.setIcon(clearIcon);
+        clearCustomerButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+        clearCustomerButton.setVerticalTextPosition(SwingConstants.CENTER);
+        CustomersPanel.add(clearCustomerButton);
+
+        JLabel typeLabel = new JLabel("Type:");
+        typeLabel.setForeground(Color.BLACK);
+        typeLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        typeLabel.setBounds(58, 63, 62, 14);
+        CustomersPanel.add(typeLabel);
+
+        JComboBox typeComboBox = new JComboBox();
+        typeComboBox.setToolTipText("");
+        typeComboBox.setBounds(163, 61, 150, 22);
+        CustomersPanel.add(typeComboBox);
+
+        JLabel nameLabel = new JLabel("Name:");
+        nameLabel.setForeground(Color.BLACK);
+        nameLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        nameLabel.setBounds(58, 100, 62, 14);
+        CustomersPanel.add(nameLabel);
+
+        nameTextField = new JTextField();
+        nameTextField.setColumns(10);
+        nameTextField.setBounds(163, 94, 150, 30);
+        CustomersPanel.add(nameTextField);
+
+        JLabel surnameLabel = new JLabel("Surname:");
+        surnameLabel.setForeground(Color.BLACK);
+        surnameLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        surnameLabel.setBounds(58, 141, 77, 14);
+        CustomersPanel.add(surnameLabel);
+
+        SurnameTextField = new JTextField();
+        SurnameTextField.setColumns(10);
+        SurnameTextField.setBounds(163, 135, 150, 30);
+        CustomersPanel.add(SurnameTextField);
+
+        JLabel emailLabel = new JLabel("Email:");
+        emailLabel.setForeground(Color.BLACK);
+        emailLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        emailLabel.setBounds(58, 182, 77, 14);
+        CustomersPanel.add(emailLabel);
+
+        JLabel phoneLabel = new JLabel("Phone:");
+        phoneLabel.setForeground(Color.BLACK);
+        phoneLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
+        phoneLabel.setBounds(58, 221, 77, 14);
+        CustomersPanel.add(phoneLabel);
+
+        emailTextField = new JTextField();
+        emailTextField.setColumns(10);
+        emailTextField.setBounds(163, 176, 150, 30);
+        CustomersPanel.add(emailTextField);
+
+        phoneTextField = new JTextField();
+        phoneTextField.setColumns(10);
+        phoneTextField.setBounds(163, 215, 150, 30);
+        CustomersPanel.add(phoneTextField);
+
+
+
+
+//        URL url = null;
+//        try {
+//            url = new URL("https://www.motortrend.com/uploads/sites/10/2015/11/2016-nissan-gtr-premium-coupe-angular-front.png");
+//        } catch (MalformedURLException e1) {
+//            // TODO Auto-generated catch block
+//            e1.printStackTrace();
+//        }
+//        BufferedImage image=null;
+//        try {
+//            image = ImageIO.read(url);
+//        } catch (IOException e1) {
+//            // TODO Auto-generated catch block
+//            e1.printStackTrace();
+//        }
+//        Image scaledImage = image.getScaledInstance(175, 90, Image.SCALE_DEFAULT);
+//        JLabel label = new JLabel(new ImageIcon(scaledImage));
+//        label.setBounds(10, 400, 175, 90);
+//        MenuPanel.add(label);
 
 
         CarsButton.addActionListener(new ActionListener() {
