@@ -70,7 +70,7 @@ public class MainFrame extends JFrame {
         BufferedImage myPicture = null;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 1000, 569);
+        setBounds(100, 100, 998, 567);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(null);
@@ -179,7 +179,7 @@ public class MainFrame extends JFrame {
 
 
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-        tabbedPane.setBounds(195, -25, 789, 555);
+        tabbedPane.setBounds(195, -25, 790, 557);
         contentPane.add(tabbedPane);
 
         JPanel CarsTabbedPane = new JPanel();
@@ -257,12 +257,6 @@ public class MainFrame extends JFrame {
         ImageURLLabel.setBounds(58, 241, 90, 14);
         CarsTabbedPane.add(ImageURLLabel);
 
-        JLabel IDLabel = new JLabel("ID:");
-        IDLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-        IDLabel.setForeground(Color.BLACK);
-        IDLabel.setBounds(58, 43, 62, 14);
-        CarsTabbedPane.add(IDLabel);
-
         imageURLtextField = new JTextField();
         imageURLtextField.setBounds(163, 237, 150, 30);
         CarsTabbedPane.add(imageURLtextField);
@@ -282,11 +276,6 @@ public class MainFrame extends JFrame {
         modelTextField.setColumns(10);
         modelTextField.setBounds(163, 117, 150, 30);
         CarsTabbedPane.add(modelTextField);
-
-        idTextField = new JTextField();
-        idTextField.setColumns(10);
-        idTextField.setBounds(163, 37, 150, 30);
-        CarsTabbedPane.add(idTextField);
 
         brandTextField = new JTextField();
         brandTextField.setColumns(10);

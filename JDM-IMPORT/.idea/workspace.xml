@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0656fc35-2721-4063-a989-e7a4910a0e0f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../CONCEPTUAL MODEL/DATABASE.mwb" beforeDir="false" afterPath="$PROJECT_DIR$/../CONCEPTUAL MODEL/DATABASE.mwb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../CONCEPTUAL MODEL/DATABASE.mwb.bak" beforeDir="false" afterPath="$PROJECT_DIR$/../CONCEPTUAL MODEL/DATABASE.mwb.bak" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JDM-LOGO.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/org/unibl/etf/GUI/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/unibl/etf/GUI/MainFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/org/unibl/etf/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/org/unibl/etf/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
