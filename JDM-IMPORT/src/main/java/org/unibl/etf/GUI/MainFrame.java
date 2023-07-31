@@ -1,9 +1,13 @@
 package org.unibl.etf.GUI;
 
+import org.unibl.etf.DAO.impl.CarDAOImpl;
+import org.unibl.etf.MODELS.Car;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,6 +16,9 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainFrame extends JFrame {
@@ -53,6 +60,12 @@ public class MainFrame extends JFrame {
     private JTextField orderTotalTextField;
     private JTextField quantityTextField;
 
+
+    private CarDAOImpl carDAO;
+    private List<Car> cars;
+    private CarTableModel model;
+
+
     public void setButtonColor(JButton p) {
         p.setBackground(Color.RED);
         p.setForeground(Color.WHITE);
@@ -63,10 +76,104 @@ public class MainFrame extends JFrame {
         p.setForeground(Color.RED);
     }
 
+    class CarTableModel extends AbstractTableModel{
+        private List<Car> data;
+        private boolean[] columnEditables = new boolean[] { false, false, false, false, false, false };
+        private String[] header = new String[] { "Id", "Brand", "Model", "Year", "Price", "Image URL"};
+
+        public CarTableModel() {
+            this.data = new ArrayList<Car>();
+        }
+
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return columnEditables[column];
+        }
+
+        @Override
+        public String getColumnName(int column) {
+            return header[column];
+        }
+
+        @Override
+        public int getColumnCount() {
+            return header.length;
+        }
+
+        public List<Car> getData(){
+            return this.data;
+
+        }
+
+        public void updateData(List<Car>data) {
+            this.data=data;
+            fireTableDataChanged();
+        }
+
+        @Override
+        public int getRowCount() {
+            return data.size();
+        }
+
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            Car obj = data.get(rowIndex);
+            switch (columnIndex) {
+                case 0:
+                    return obj.getId();
+                case 1:
+                    return obj.getBrand();
+                case 2:
+                    return obj.getModel();
+                case 3:
+                    return obj.getYear();
+                case 4:
+                    return obj.getPrice();
+                case 5:
+                    return obj.getImageURL();
+                default:
+                    return null;
+            }
+        }
+
+        public void addRow(Car car) {
+            data.add(car);
+            fireTableRowsInserted(data.size() - 1, data.size() - 1);
+        }
+
+        public Car getAt(int row) {
+            return this.data.get(row);
+        }
+
+        public void deleteRow(int row) {
+            this.data.remove(row);
+            fireTableRowsDeleted(row, row);
+        }
+
+        public void updateRow(int index, Car car) {
+            this.data.set(index, car);
+            fireTableRowsUpdated(index, index);
+        }
+    }
+
     /**
      * Create the frame.
      */
     public MainFrame() {
+
+
+        // ------------------- DATABASE CARS -------------------
+        carDAO = new CarDAOImpl();
+
+        try{
+            cars = carDAO.findAll();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+
+
+
         BufferedImage myPicture = null;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -190,10 +297,15 @@ public class MainFrame extends JFrame {
 
         // ---------------- CARS -----------------------
         carsTable = new JTable();
+        this.model = new CarTableModel();
+        carsTable.setModel(model);
         JScrollPane carsTableScrollPane = new JScrollPane(carsTable);
         carsTableScrollPane.setPreferredSize(new Dimension(740, 200));
         carsTableScrollPane.setBounds(20,300,740, 200);
         CarsTabbedPane.add(carsTableScrollPane);
+
+
+
 
         JButton addCarButton = new JButton("Add");
         addCarButton.setBackground(Color.GREEN);
@@ -202,6 +314,22 @@ public class MainFrame extends JFrame {
         addCarButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         addCarButton.setVerticalTextPosition(SwingConstants.CENTER);
         CarsTabbedPane.add(addCarButton);
+
+        addCarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Car car = carCheckAndCreate();
+                if (car != null)
+                    try {
+                        carDAO.insert(car);
+                        model.addRow(car);
+                    } catch (SQLException a) {
+                        JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+            }
+        });
 
         JButton updateCarButton = new JButton("Update");
         updateCarButton.setBackground(new Color(30, 144, 255));
@@ -226,6 +354,13 @@ public class MainFrame extends JFrame {
         clearCarButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         clearCarButton.setVerticalTextPosition(SwingConstants.CENTER);
         CarsTabbedPane.add(clearCarButton);
+
+        clearCarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clearCarFields();
+            }
+        });
 
         JLabel BrandLabel = new JLabel("Brand:");
         BrandLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -282,6 +417,31 @@ public class MainFrame extends JFrame {
         brandTextField.setBounds(163, 77, 150, 30);
         CarsTabbedPane.add(brandTextField);
 
+        displayCars();
+
+        carsTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) { // Double-click event
+                    int selectedRow = carsTable.getSelectedRow();
+                    if (selectedRow != -1) { // Ensure a row is selected
+                        // Get the data from the selected row
+                        int id = (int) carsTable.getValueAt(selectedRow, 0);
+                        String brand = (String) carsTable.getValueAt(selectedRow, 1);
+                        String model = (String) carsTable.getValueAt(selectedRow, 2);
+                        String year = (String) carsTable.getValueAt(selectedRow, 3);
+                        double price = (double) carsTable.getValueAt(selectedRow, 4);
+                        String imageURL = (String) carsTable.getValueAt(selectedRow, 5);
+
+                       modelTextField.setText(model);
+                       brandTextField.setText(brand);
+                       yearTextField.setText(year);
+                       priceTextField.setText(String.valueOf(price));
+                       imageURLtextField.setText(imageURL);
+                    }
+                }
+            }
+        });
 
 
 
@@ -545,5 +705,60 @@ public class MainFrame extends JFrame {
 
 
 
+    }
+
+    private void displayCars() {
+            try {
+                this.cars = this.carDAO.findAll();
+                SwingUtilities.invokeLater(() -> {
+                    cars.stream().forEach(car ->model .addRow(car));
+                });
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+
+    private Car carCheckAndCreate() {
+        String brand = brandTextField.getText();
+        if (brand.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Insert the brand name", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        String model = modelTextField.getText();
+        if (model.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Insert the model name", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        String year = yearTextField.getText();
+        if (year.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Insert the year", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        String price = priceTextField.getText();
+        if (price.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Insert the price", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        String imageURL = imageURLtextField.getText();
+        if (imageURL.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Insert the image URL", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        return new Car(brand, model, year, Double.parseDouble(price), imageURL);
+    }
+
+    private void clearCarFields() {
+        brandTextField.setText("");
+        modelTextField.setText("");
+        yearTextField.setText("");
+        priceTextField.setText("");
+        imageURLtextField.setText("");
     }
 }

@@ -92,4 +92,17 @@ public class Order {
     public void setOrderTotal(double orderTotal) {
         this.orderTotal = orderTotal;
     }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", customer=" + customer +
+                ", car=" + car +
+                ", date='" + date + '\'' +
+                ", deliveryDate='" + deliveryDate + '\'' +
+                ", quantity=" + quantity +
+                ", orderTotal=" + orderTotal +
+                '}';
+    }
 }

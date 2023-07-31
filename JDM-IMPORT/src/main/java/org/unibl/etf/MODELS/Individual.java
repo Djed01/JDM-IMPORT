@@ -14,7 +14,7 @@ public class Individual extends Customer{
         this.lastName = lastName;
     }
 
-    public Individual(String email, String phone, String firstName, String lastName) {
+    public Individual(String firstName, String lastName,String email, String phone) {
         super(email, phone);
         this.firstName = firstName;
         this.lastName = lastName;
@@ -34,5 +34,13 @@ public class Individual extends Customer{
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    @Override
+    public String toString() {
+        return "Individual{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
     }
 }

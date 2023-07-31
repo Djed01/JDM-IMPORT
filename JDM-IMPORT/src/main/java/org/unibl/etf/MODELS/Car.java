@@ -24,7 +24,6 @@ public class Car {
 
     public Car(String brand, String model, String year, double price, String imageURL) {
         super();
-        this.id = id;
         this.brand = brand;
         this.model = model;
         this.year = year;
@@ -78,5 +77,17 @@ public class Car {
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
+    }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", brand='" + brand + '\'' +
+                ", model='" + model + '\'' +
+                ", year='" + year + '\'' +
+                ", price=" + price +
+                ", imageURL='" + imageURL + '\'' +
+                '}';
     }
 }
