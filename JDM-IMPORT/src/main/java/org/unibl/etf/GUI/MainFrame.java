@@ -126,7 +126,7 @@ public class MainFrame extends JFrame {
                 case 2:
                     return obj.getModel();
                 case 3:
-                    return obj.getYear();
+                    return obj.getYear().split("-")[0];
                 case 4:
                     return obj.getPrice();
                 case 5:
@@ -173,7 +173,7 @@ public class MainFrame extends JFrame {
 
 
 
-
+        this.setTitle("JDM-IMPORT");
         BufferedImage myPicture = null;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -199,6 +199,7 @@ public class MainFrame extends JFrame {
         JLabel LogoLabel = new JLabel(new ImageIcon(newImage));
         LogoLabel.setBounds(10, 44, 177, 67); //Sets the location of the image
         MenuPanel.add(LogoLabel);
+        this.setIconImage(newImage);
 
         JButton CarsButton = new JButton("CARS");
         CarsButton.addMouseListener(new MouseAdapter() {
@@ -339,6 +340,34 @@ public class MainFrame extends JFrame {
         updateCarButton.setVerticalTextPosition(SwingConstants.CENTER);
         CarsTabbedPane.add(updateCarButton);
 
+        updateCarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    int row = carsTable.getSelectedRow();
+                    if (row == -1) {
+                        JOptionPane.showMessageDialog(null, "Select a car!", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        Car car = carCheckAndCreate();
+
+                        if(car!=null) {
+
+                            int id = (int) carsTable.getValueAt(row, 0);
+                            car.setId(id);
+
+                            try {
+                                if(carDAO.update(car)){
+                                    model.updateRow(row, car);
+                                }
+                            } catch (SQLException a) {
+                                JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
+                                        JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
+                    }
+                }
+        });
+
         JButton deleteCarButton = new JButton("Delete");
         deleteCarButton.setBackground(Color.RED);
         deleteCarButton.setBounds(431, 170, 133, 58);
@@ -346,6 +375,33 @@ public class MainFrame extends JFrame {
         deleteCarButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         deleteCarButton.setVerticalTextPosition(SwingConstants.CENTER);
         CarsTabbedPane.add(deleteCarButton);
+
+        deleteCarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = carsTable.getSelectedRow();
+                if (row == -1) {
+                    JOptionPane.showMessageDialog(null, "Select a car!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                } else {
+                    int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the car?",
+                            "Confirm delete", JOptionPane.YES_NO_OPTION);
+                    if (result == JOptionPane.YES_OPTION) {
+                    Car car = model.getAt(row);
+                    try {
+                        if(carDAO.delete(car)) {
+                            model.deleteRow(row);
+                        }
+                    } catch (SQLException a) {
+                        JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+            }
+        }
+        });
 
         JButton clearCarButton = new JButton("Clear");
         clearCarButton.setBackground(Color.YELLOW);
@@ -422,7 +478,7 @@ public class MainFrame extends JFrame {
         carsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) { // Double-click event
+                if (e.getClickCount() == 1) { // Single-click event
                     int selectedRow = carsTable.getSelectedRow();
                     if (selectedRow != -1) { // Ensure a row is selected
                         // Get the data from the selected row

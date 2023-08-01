@@ -74,7 +74,7 @@ public class CarDAOImpl implements CarDAO {
 
     @Override
     public boolean update(Car car) throws SQLException {
-        String query="{call vjezba_update(?,?,?,?,?,?)}";
+        String query="{call car_update(?,?,?,?,?,?)}";
         boolean status=false;
         var connectionPool = ConnectionPool.getInstance();
         Connection connection = null;
@@ -99,7 +99,7 @@ public class CarDAOImpl implements CarDAO {
 
     @Override
     public boolean delete(Car car) throws SQLException {
-        String query = "delete from vjezba where IdVjezbe=?";
+        String query = "delete from orderable_car where IdCar=?";
         boolean status=false;
 
         var connectionPool = ConnectionPool.getInstance();
