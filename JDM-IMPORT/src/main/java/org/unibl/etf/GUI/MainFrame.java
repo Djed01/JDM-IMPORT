@@ -1,7 +1,11 @@
 package org.unibl.etf.GUI;
 
 import org.unibl.etf.DAO.impl.CarDAOImpl;
+import org.unibl.etf.DAO.impl.CustomerDAOImpl;
 import org.unibl.etf.MODELS.Car;
+import org.unibl.etf.MODELS.Company;
+import org.unibl.etf.MODELS.Customer;
+import org.unibl.etf.MODELS.Individual;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -49,7 +53,7 @@ public class MainFrame extends JFrame {
 
 
     private JTextField nameTextField;
-    private JTextField SurnameTextField;
+    private JTextField surnameTextField;
     private JTextField emailTextField;
     private JTextField phoneTextField;
 
@@ -63,8 +67,14 @@ public class MainFrame extends JFrame {
 
     private CarDAOImpl carDAO;
     private List<Car> cars;
-    private CarTableModel model;
+    private CarTableModel carsModel;
 
+
+
+    private CustomerDAOImpl customerDAO;
+    private List<Customer> customers;
+    private CustomerTableModel customersModel;
+    private JComboBox typeComboBox;
 
     public void setButtonColor(JButton p) {
         p.setBackground(Color.RED);
@@ -74,86 +84,6 @@ public class MainFrame extends JFrame {
     public void resetButtonColor(JButton p) {
         p.setBackground(new Color(47, 47, 47));
         p.setForeground(Color.RED);
-    }
-
-    class CarTableModel extends AbstractTableModel{
-        private List<Car> data;
-        private boolean[] columnEditables = new boolean[] { false, false, false, false, false, false };
-        private String[] header = new String[] { "Id", "Brand", "Model", "Year", "Price", "Image URL"};
-
-        public CarTableModel() {
-            this.data = new ArrayList<Car>();
-        }
-
-        @Override
-        public boolean isCellEditable(int row, int column) {
-            return columnEditables[column];
-        }
-
-        @Override
-        public String getColumnName(int column) {
-            return header[column];
-        }
-
-        @Override
-        public int getColumnCount() {
-            return header.length;
-        }
-
-        public List<Car> getData(){
-            return this.data;
-
-        }
-
-        public void updateData(List<Car>data) {
-            this.data=data;
-            fireTableDataChanged();
-        }
-
-        @Override
-        public int getRowCount() {
-            return data.size();
-        }
-
-        @Override
-        public Object getValueAt(int rowIndex, int columnIndex) {
-            Car obj = data.get(rowIndex);
-            switch (columnIndex) {
-                case 0:
-                    return obj.getId();
-                case 1:
-                    return obj.getBrand();
-                case 2:
-                    return obj.getModel();
-                case 3:
-                    return obj.getYear().split("-")[0];
-                case 4:
-                    return obj.getPrice();
-                case 5:
-                    return obj.getImageURL();
-                default:
-                    return null;
-            }
-        }
-
-        public void addRow(Car car) {
-            data.add(car);
-            fireTableRowsInserted(data.size() - 1, data.size() - 1);
-        }
-
-        public Car getAt(int row) {
-            return this.data.get(row);
-        }
-
-        public void deleteRow(int row) {
-            this.data.remove(row);
-            fireTableRowsDeleted(row, row);
-        }
-
-        public void updateRow(int index, Car car) {
-            this.data.set(index, car);
-            fireTableRowsUpdated(index, index);
-        }
     }
 
     /**
@@ -298,8 +228,8 @@ public class MainFrame extends JFrame {
 
         // ---------------- CARS -----------------------
         carsTable = new JTable();
-        this.model = new CarTableModel();
-        carsTable.setModel(model);
+        this.carsModel = new CarTableModel();
+        carsTable.setModel(carsModel);
         JScrollPane carsTableScrollPane = new JScrollPane(carsTable);
         carsTableScrollPane.setPreferredSize(new Dimension(740, 200));
         carsTableScrollPane.setBounds(20,300,740, 200);
@@ -323,7 +253,7 @@ public class MainFrame extends JFrame {
                 if (car != null)
                     try {
                         carDAO.insert(car);
-                        model.addRow(car);
+                        carsModel.addRow(car);
                     } catch (SQLException a) {
                         JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
                                 JOptionPane.ERROR_MESSAGE);
@@ -357,7 +287,7 @@ public class MainFrame extends JFrame {
 
                             try {
                                 if(carDAO.update(car)){
-                                    model.updateRow(row, car);
+                                    carsModel.updateRow(row, car);
                                 }
                             } catch (SQLException a) {
                                 JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
@@ -388,10 +318,10 @@ public class MainFrame extends JFrame {
                     int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the car?",
                             "Confirm delete", JOptionPane.YES_NO_OPTION);
                     if (result == JOptionPane.YES_OPTION) {
-                    Car car = model.getAt(row);
+                    Car car = carsModel.getAt(row);
                     try {
                         if(carDAO.delete(car)) {
-                            model.deleteRow(row);
+                            carsModel.deleteRow(row);
                         }
                     } catch (SQLException a) {
                         JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
@@ -613,12 +543,22 @@ public class MainFrame extends JFrame {
 
         // ------------------- CUSTOMERS ---------------------------
 
+        customerDAO = new CustomerDAOImpl();
+
+        try{
+            customers = customerDAO.findAll();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
         JPanel CustomersPanel = new JPanel();
         CustomersPanel.setLayout(null);
         CustomersPanel.setBackground(new Color(81, 86, 88));
         tabbedPane.addTab("CUSTOMERS", null, CustomersPanel, null);
 
         customersTable = new JTable();
+        this.customersModel = new CustomerTableModel();
+        customersTable.setModel(customersModel);
         JScrollPane customersTableScrollPane = new JScrollPane(customersTable);
         customersTableScrollPane.setPreferredSize(new Dimension(740, 200));
         customersTableScrollPane.setBounds(20,300,740, 200);
@@ -632,6 +572,21 @@ public class MainFrame extends JFrame {
         addCustomerButton.setVerticalTextPosition(SwingConstants.CENTER);
         CustomersPanel.add(addCustomerButton);
 
+        addCustomerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Customer customer = customerCheckAndCreate();
+                if (customer != null)
+                    try {
+                        customerDAO.insert(customer,typeComboBox.getSelectedItem().toString());
+                        customersModel.addRow(customer);
+                    } catch (SQLException a) {
+                        JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+            }
+        });
+
         JButton updateCustomerButton = new JButton("Update");
         updateCustomerButton.setBackground(new Color(30, 144, 255));
         updateCustomerButton.setBounds(599, 63, 133, 58);
@@ -639,6 +594,33 @@ public class MainFrame extends JFrame {
         updateCustomerButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         updateCustomerButton.setVerticalTextPosition(SwingConstants.CENTER);
         CustomersPanel.add(updateCustomerButton);
+
+
+        updateCustomerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = customersTable.getSelectedRow();
+                if (row == -1) {
+                    JOptionPane.showMessageDialog(null, "Morate selektovati red u tabeli", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else {
+                    Customer customer = customerCheckAndCreate();
+                    if (customer != null) {
+                        int id = (int) customersTable.getValueAt(row, 0);
+                        try {
+                            customerDAO.update(customer,id);
+                            customersModel.updateRow(row, customer);
+                        } catch (SQLException a) {
+                            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                            System.out.println("Error Code: " + a.getErrorCode());
+                            System.out.println("SQL State: " + a.getSQLState());
+                            System.out.println("Message: " + a.getMessage());
+                        }
+                    }
+                }
+            }
+        });
 
         JButton deleteCustomerButton = new JButton("Delete");
         deleteCustomerButton.setBackground(Color.RED);
@@ -648,6 +630,34 @@ public class MainFrame extends JFrame {
         deleteCustomerButton.setVerticalTextPosition(SwingConstants.CENTER);
         CustomersPanel.add(deleteCustomerButton);
 
+        deleteCustomerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = customersTable.getSelectedRow();
+                if (row == -1) {
+                    JOptionPane.showMessageDialog(null, "Morate selektovati red u tabeli", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else {
+                    int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the customer?",
+                            "Confirm delete", JOptionPane.YES_NO_OPTION);
+                    if (result == JOptionPane.YES_OPTION) {
+                        int id = (int) customersTable.getValueAt(row, 0);
+                        try {
+                            customerDAO.delete(id);
+                            customersModel.deleteRow(row);
+                        } catch (SQLException a) {
+                            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                            System.err.println("SQL Exception:");
+                            System.err.println("Error Code: " + a.getErrorCode());
+                            System.err.println("SQL State: " + a.getSQLState());
+                            System.err.println("Message: " + a.getMessage());
+                        }
+                    }
+                }
+            }
+        });
+
         JButton clearCustomerButton = new JButton("Clear");
         clearCustomerButton.setBackground(Color.YELLOW);
         clearCustomerButton.setBounds(599, 170, 133, 58);
@@ -656,21 +666,31 @@ public class MainFrame extends JFrame {
         clearCustomerButton.setVerticalTextPosition(SwingConstants.CENTER);
         CustomersPanel.add(clearCustomerButton);
 
+        clearCustomerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clearCustomerFields();
+            }
+        });
+
         JLabel typeLabel = new JLabel("Type:");
         typeLabel.setForeground(Color.BLACK);
         typeLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
         typeLabel.setBounds(58, 63, 62, 14);
         CustomersPanel.add(typeLabel);
 
-        JComboBox typeComboBox = new JComboBox();
+        typeComboBox = new JComboBox();
+        typeComboBox.addItem("Individual");
+        typeComboBox.addItem("Company");
         typeComboBox.setToolTipText("");
         typeComboBox.setBounds(163, 61, 150, 22);
         CustomersPanel.add(typeComboBox);
 
+
         JLabel nameLabel = new JLabel("Name:");
         nameLabel.setForeground(Color.BLACK);
         nameLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-        nameLabel.setBounds(58, 100, 62, 14);
+        nameLabel.setBounds(58, 100, 85, 17);
         CustomersPanel.add(nameLabel);
 
         nameTextField = new JTextField();
@@ -684,10 +704,10 @@ public class MainFrame extends JFrame {
         surnameLabel.setBounds(58, 141, 77, 14);
         CustomersPanel.add(surnameLabel);
 
-        SurnameTextField = new JTextField();
-        SurnameTextField.setColumns(10);
-        SurnameTextField.setBounds(163, 135, 150, 30);
-        CustomersPanel.add(SurnameTextField);
+        surnameTextField = new JTextField();
+        surnameTextField.setColumns(10);
+        surnameTextField.setBounds(163, 135, 150, 30);
+        CustomersPanel.add(surnameTextField);
 
         JLabel emailLabel = new JLabel("Email:");
         emailLabel.setForeground(Color.BLACK);
@@ -711,6 +731,70 @@ public class MainFrame extends JFrame {
         phoneTextField.setBounds(163, 215, 150, 30);
         CustomersPanel.add(phoneTextField);
 
+        customersTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) { // Single-click event
+                    clearCustomerFields();
+                    int selectedRow = customersTable.getSelectedRow();
+                    if (selectedRow != -1) { // Ensure a row is selected
+                        // Get the data from the selected row
+                        int id = (int) customersTable.getValueAt(selectedRow, 0);
+                        String name = (String) customersTable.getValueAt(selectedRow, 1);
+                        String surname = (String) customersTable.getValueAt(selectedRow, 2);
+
+                        if(surname == null) {
+                             name = (String) customersTable.getValueAt(selectedRow, 3);
+                             typeComboBox.setSelectedItem("Company");
+                        }else{
+                            typeComboBox.setSelectedItem("Individual");
+                        }
+
+                        ActionListener[] actionListeners = typeComboBox.getActionListeners();
+                        if (actionListeners != null && actionListeners.length > 0) {
+                            ActionEvent event = new ActionEvent(typeComboBox, ActionEvent.ACTION_PERFORMED, "Selection Changed");
+                            for (ActionListener listener : actionListeners) {
+                                listener.actionPerformed(event);
+                            }
+                        }
+
+                        String email = (String) customersTable.getValueAt(selectedRow, 4);
+                        String phone = (String) customersTable.getValueAt(selectedRow, 5);
+                        typeComboBox.setEnabled(false);
+
+                        String finalName = name;
+                        SwingUtilities.invokeLater(() -> {
+                            // Display the data in the text fields
+                            nameTextField.setText(finalName);
+                            surnameTextField.setText(surname);
+                            emailTextField.setText(email);
+                            phoneTextField.setText(phone);
+                        });
+                    }
+                }
+            }
+        });
+
+
+
+        typeComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(typeComboBox.getSelectedItem().equals("Individual")){
+                    nameLabel.setText("Name:");
+                    surnameTextField.setEnabled(true);
+                    surnameTextField.setBackground(Color.WHITE);
+                    surnameLabel.setForeground(Color.BLACK);
+                }else{
+                    nameLabel.setText("Company:");
+                    surnameTextField.setEnabled(false);
+                    surnameTextField.setBackground(new Color(217, 219, 219));
+                    surnameLabel.setForeground(null);
+                }
+            }
+        });
+
+        displayCustomers();
 
 
 
@@ -763,11 +847,13 @@ public class MainFrame extends JFrame {
 
     }
 
+
+    // ---------------------------- DISPLAY METHODS ----------------------------
     private void displayCars() {
             try {
                 this.cars = this.carDAO.findAll();
                 SwingUtilities.invokeLater(() -> {
-                    cars.stream().forEach(car ->model .addRow(car));
+                    cars.stream().forEach(car ->carsModel .addRow(car));
                 });
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",
@@ -775,6 +861,19 @@ public class MainFrame extends JFrame {
             }
         }
 
+        private void displayCustomers(){
+            try {
+                this.customers = this.customerDAO.findAll();
+                SwingUtilities.invokeLater(() -> {
+                    customers.stream().forEach(customer ->customersModel .addRow(customer));
+                });
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        //---------------------------- CHECK AND CREATE METHODS ----------------------------
 
     private Car carCheckAndCreate() {
         String brand = brandTextField.getText();
@@ -810,11 +909,60 @@ public class MainFrame extends JFrame {
         return new Car(brand, model, year, Double.parseDouble(price), imageURL);
     }
 
+    private Customer customerCheckAndCreate() {
+        String type = (String) typeComboBox.getSelectedItem();
+        String name = nameTextField.getText();
+        if (name.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Insert the name", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        String surname = surnameTextField.getText();
+        if (surname.isBlank() && "Individual".equals(type)) {
+            JOptionPane.showMessageDialog(null, "Insert the surname", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        String email = emailTextField.getText();
+        if (email.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Insert the email", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        String phone = phoneTextField.getText();
+        if (phone.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Insert the phone", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
+        if ("Individual".equals(type)) {
+            return new Individual(name, surname, email, phone);
+        } else if ("Company".equals(type)){
+            return new Company(name, email, phone);
+        }else {
+            return null;
+        }
+
+    }
+
+
+    // ---------------------------- CLEAR METHODS ----------------------------
+
     private void clearCarFields() {
         brandTextField.setText("");
         modelTextField.setText("");
         yearTextField.setText("");
         priceTextField.setText("");
         imageURLtextField.setText("");
+    }
+
+    private void clearCustomerFields(){
+        typeComboBox.setEnabled(true);
+        typeComboBox.setSelectedIndex(0);
+        nameTextField.setText("");
+        surnameTextField.setText("");
+        emailTextField.setText("");
+        phoneTextField.setText("");
     }
 }

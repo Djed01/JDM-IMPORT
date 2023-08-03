@@ -74,7 +74,7 @@ public class CarDAOImpl implements CarDAO {
 
     @Override
     public boolean update(Car car) throws SQLException {
-        String query="{call car_update(?,?,?,?,?,?)}";
+        String query="{call UpdateCustomer(?,?,?,?,?,?)}";
         boolean status=false;
         var connectionPool = ConnectionPool.getInstance();
         Connection connection = null;

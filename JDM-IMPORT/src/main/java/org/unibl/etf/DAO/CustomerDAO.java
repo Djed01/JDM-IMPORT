@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface CustomerDAO {
     List<Customer> findAll()throws SQLException;
-    Customer insert(Customer customer)throws SQLException;
-    boolean delete(Customer customer)throws SQLException;
-    boolean update(Customer customer)throws SQLException;
+    Customer insert(Customer customer,String type)throws SQLException;
+    boolean delete(int id)throws SQLException;
+    boolean update(Customer customer, int id)throws SQLException;
 }

@@ -7,12 +7,12 @@ public class Company extends Customer{
         super();
     }
 
-    public Company(int id, String email, String phone, String name) {
+    public Company(int id, String name, String email, String phone) {
         super(id, email, phone);
         this.name = name;
     }
 
-    public Company(String email, String phone, String name) {
+    public Company(String name, String email, String phone) {
         super(email, phone);
         this.name = name;
     }

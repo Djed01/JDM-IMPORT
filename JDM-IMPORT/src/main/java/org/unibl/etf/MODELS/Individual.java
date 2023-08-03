@@ -8,7 +8,7 @@ public class Individual extends Customer{
         super();
     }
 
-    public Individual(int id, String email, String phone, String firstName, String lastName) {
+    public Individual(int id,String firstName, String lastName, String email, String phone) {
         super(id, email, phone);
         this.firstName = firstName;
         this.lastName = lastName;

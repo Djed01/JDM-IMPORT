@@ -15,7 +15,10 @@ import java.util.List;
 public class CustomerDAOImpl implements CustomerDAO {
     @Override
     public List<Customer> findAll() throws SQLException {
-        String query = "select * from vjezba_view";
+        String query = "SELECT idCustomer, FirstName, LastName, CompanyName, Email, Phone\n" +
+                "FROM (customer c\n" +
+                "LEFT JOIN individual i ON c.idCustomer = i.CUSTOMER_idCustomer\n" +
+                "LEFT JOIN company co ON c.idCustomer = co.CUSTOMER_idCustomer);";
 
         var connectionPool = ConnectionPool.getInstance();
         Connection connection = null;
@@ -27,12 +30,12 @@ public class CustomerDAOImpl implements CustomerDAO {
             statement = connection.prepareStatement(query);
             resultSet = statement.executeQuery();
             while (resultSet.next())
-                if(resultSet.getString(1)!=null) {
-                    results.add(new Individual(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3),
-                            resultSet.getString(4)));
+                if(resultSet.getString(4)==null) {
+                    results.add(new Individual(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
+                            resultSet.getString(5), resultSet.getString(6)));
                 }else {
-                    results.add(new Company(resultSet.getString(1), resultSet.getString(3),
-                            resultSet.getString(4)));
+                    results.add(new Company(resultSet.getInt(1), resultSet.getString(4),
+                            resultSet.getString(5), resultSet.getString(6)));
                 }
         } finally {
             connectionPool.checkIn(connection);
@@ -42,9 +45,9 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public Customer insert(Customer customer)throws SQLException {
+    public Customer insert(Customer customer,String type)throws SQLException {
 
-        String query="{call vjezba_insert(?,?,?,?,?,?)}";
+        String query="{call InsertCustomer(?,?,?,?,?,?,?)}";
 
         var connectionPool = ConnectionPool.getInstance();
         Connection connection = null;
@@ -53,21 +56,34 @@ public class CustomerDAOImpl implements CustomerDAO {
             connection=connectionPool.checkOut();
             statement=connection.prepareCall(query);
             if(customer instanceof Company){
-                statement.setString(1,((Company) customer).getName());
+
+                statement.setString(1,((Company) customer).getPhone());
                 statement.setString(2,((Company) customer).getEmail());
-                statement.setString(3,((Company) customer).getPhone());
+                statement.setString(3,type);
+                statement.setNull(4, Types.VARCHAR);
+                statement.setNull(5, Types.VARCHAR);
+                statement.setString(6,((Company) customer).getName());
 
             }else if(customer instanceof Individual){
-                statement.setString(1,((Individual) customer).getFirstName());
-                statement.setString(2,((Individual) customer).getLastName());
-                statement.setString(3,((Individual) customer).getEmail());
-                statement.setString(4,((Individual) customer).getPhone());
+
+                statement.setString(1,((Individual) customer).getPhone());
+                statement.setString(2,((Individual) customer).getEmail());
+                statement.setString(3,type);
+                statement.setString(4,((Individual) customer).getFirstName());
+                statement.setString(5,((Individual) customer).getLastName());
+                statement.setNull(6, Types.VARCHAR);
+
             }
 
-            statement.registerOutParameter(6, Types.INTEGER);
-            statement.executeUpdate();
-            var id=statement.getInt(0);
-            customer.setId(id);
+            statement.registerOutParameter(7, Types.INTEGER);
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted == 0) {
+                throw new SQLException("Failed to insert the customer record.");
+            }
+
+            // Retrieve the generated ID
+            int generatedId = statement.getInt(7);
+            customer.setId(generatedId);
         }
         finally {
             connectionPool.checkIn(connection);
@@ -77,8 +93,8 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public boolean update(Customer customer) throws SQLException {
-        String query="{call vjezba_update(?,?,?,?,?,?)}";
+    public boolean update(Customer customer, int id) throws SQLException {
+        String query="{call UpdateCustomer(?,?,?,?,?,?)}";
         boolean status=false;
         var connectionPool = ConnectionPool.getInstance();
         Connection connection = null;
@@ -87,14 +103,19 @@ public class CustomerDAOImpl implements CustomerDAO {
             connection=connectionPool.checkOut();
             statement=connection.prepareCall(query);
             if(customer instanceof Company) {
-                statement.setString(1, ((Company) customer).getName());
+                statement.setInt(1,id);
+                statement.setString(2, ((Company) customer).getPhone());
                 statement.setString(3, ((Company) customer).getEmail());
-                statement.setString(4, ((Company) customer).getPhone());
+                statement.setNull(4, Types.VARCHAR);
+                statement.setNull(5, Types.VARCHAR);
+                statement.setString(6, ((Company) customer).getName());
             }else if(customer instanceof Individual){
-                statement.setString(1,((Individual) customer).getFirstName());
-                statement.setString(2,((Individual) customer).getLastName());
-                statement.setString(3,((Individual) customer).getEmail());
-                statement.setString(4,((Individual) customer).getPhone());
+                statement.setInt(1,id);
+                statement.setString(2,((Individual) customer).getEmail());
+                statement.setString(3,((Individual) customer).getPhone());
+                statement.setString(4,((Individual) customer).getFirstName());
+                statement.setString(5,((Individual) customer).getLastName());
+                statement.setNull(6, Types.VARCHAR);
             }
             status=statement.executeUpdate()==1;
         }
@@ -106,8 +127,8 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public boolean delete(Customer customer) throws SQLException {
-        String query = "delete from vjezba where IdVjezbe=?";
+    public boolean delete(int id) throws SQLException {
+        String query = "{call DeleteCustomerByID(?)}";
         boolean status=false;
 
         var connectionPool = ConnectionPool.getInstance();
@@ -116,7 +137,7 @@ public class CustomerDAOImpl implements CustomerDAO {
         try {
             connection=connectionPool.checkOut();
             statement=connection.prepareStatement(query);
-            statement.setInt(1,customer.getId());
+            statement.setInt(1,id);
             status=statement.executeUpdate()==1;
         }
         finally {
