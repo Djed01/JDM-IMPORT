@@ -1,9 +1,15 @@
 DELIMITER //
 
-CREATE PROCEDURE InsertCustomer(IN phone VARCHAR(20), IN email VARCHAR(50), IN type VARCHAR(10), IN name VARCHAR(50), IN surname VARCHAR(50), IN company_name VARCHAR(100))
+CREATE PROCEDURE InsertCustomer(
+    IN phone VARCHAR(20),
+    IN email VARCHAR(50),
+    IN type VARCHAR(10),
+    IN name VARCHAR(50),
+    IN surname VARCHAR(50),
+    IN company_name VARCHAR(100),
+    OUT customer_id INT -- Add an output parameter for the generated ID
+)
 BEGIN
-    DECLARE customer_id INT;
-    
     -- Insert into the 'customers' table first to get the auto-generated ID
     INSERT INTO customer (Phone, Email) VALUES (phone, email);
     SET customer_id = LAST_INSERT_ID();

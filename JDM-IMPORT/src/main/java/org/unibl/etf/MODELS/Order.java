@@ -6,14 +6,14 @@ public class Order {
     private Car car;
     private String date;
     private String deliveryDate;
-    private double quantity;
+    private int quantity;
     private double orderTotal;
 
     public Order() {
         super();
     }
 
-    public Order(int id, Customer customer, Car car, String date, String deliveryDate, double quantity,
+    public Order(int id, Customer customer, Car car, String date, String deliveryDate, int quantity,
             double orderTotal) {
         super();
         this.id = id;
@@ -25,7 +25,7 @@ public class Order {
         this.orderTotal = orderTotal;
     }
 
-    public Order(Customer customer, Car car, String date, String deliveryDate, double quantity,
+    public Order(Customer customer, Car car, String date, String deliveryDate, int quantity,
             double orderTotal) {
         super();
         this.customer = customer;
@@ -77,11 +77,11 @@ public class Order {
         this.deliveryDate = deliveryDate;
     }
 
-    public double getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(double quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

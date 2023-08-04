@@ -2,10 +2,8 @@ package org.unibl.etf.GUI;
 
 import org.unibl.etf.DAO.impl.CarDAOImpl;
 import org.unibl.etf.DAO.impl.CustomerDAOImpl;
-import org.unibl.etf.MODELS.Car;
-import org.unibl.etf.MODELS.Company;
-import org.unibl.etf.MODELS.Customer;
-import org.unibl.etf.MODELS.Individual;
+import org.unibl.etf.DAO.impl.OrderDAOImpl;
+import org.unibl.etf.MODELS.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -75,6 +73,15 @@ public class MainFrame extends JFrame {
     private List<Customer> customers;
     private CustomerTableModel customersModel;
     private JComboBox typeComboBox;
+
+
+    private OrderDAOImpl orderDAO;
+    private List<Order> orders;
+    private OrderTableModel ordersModel;
+
+
+
+
 
     public void setButtonColor(JButton p) {
         p.setBackground(Color.RED);
@@ -433,6 +440,14 @@ public class MainFrame extends JFrame {
 
         // ---------------- ORDERS -------------------------
 
+        orderDAO = new OrderDAOImpl();
+
+        try{
+            orders = orderDAO.findAll();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
         JPanel OrdersPanel = new JPanel();
         OrdersPanel.setLayout(null);
         OrdersPanel.setBackground(new Color(81, 86, 88));
@@ -442,6 +457,9 @@ public class MainFrame extends JFrame {
         JScrollPane ordersTableScrollPane = new JScrollPane(ordersTable);
         ordersTableScrollPane.setPreferredSize(new Dimension(740, 200));
         ordersTableScrollPane.setBounds(20,300,740, 200);
+        this.ordersModel = new OrderTableModel();
+        ordersTable.setModel(ordersModel);
+
         OrdersPanel.add(ordersTableScrollPane);
 
         JButton addOrderButton = new JButton("Add");
@@ -539,6 +557,8 @@ public class MainFrame extends JFrame {
         quantityTextField.setColumns(10);
         quantityTextField.setBounds(163, 193, 150, 30);
         OrdersPanel.add(quantityTextField);
+
+        displayOrders();
 
 
         // ------------------- CUSTOMERS ---------------------------
@@ -866,6 +886,18 @@ public class MainFrame extends JFrame {
                 this.customers = this.customerDAO.findAll();
                 SwingUtilities.invokeLater(() -> {
                     customers.stream().forEach(customer ->customersModel .addRow(customer));
+                });
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        private void displayOrders(){
+            try {
+                this.orders = this.orderDAO.findAll();
+                SwingUtilities.invokeLater(() -> {
+                    orders.stream().forEach(order ->ordersModel .addRow(order));
                 });
             } catch (SQLException e) {
                 JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",

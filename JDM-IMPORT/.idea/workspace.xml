@@ -6,12 +6,13 @@
   <component name="ChangeListManager">
     <list default="true" id="0656fc35-2721-4063-a989-e7a4910a0e0f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/unibl/etf/DAO/CustomerDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/unibl/etf/DAO/CustomerDAO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/unibl/etf/DAO/impl/CarDAOImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/unibl/etf/DAO/impl/CarDAOImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/unibl/etf/DAO/impl/CustomerDAOImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/unibl/etf/DAO/impl/CustomerDAOImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CONCEPTUAL MODEL/DATABASE.mwb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/CONCEPTUAL MODEL/DATABASE.mwb.bak" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/unibl/etf/DAO/OrderDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/unibl/etf/DAO/OrderDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/unibl/etf/DAO/impl/OrderDAOImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/unibl/etf/DAO/impl/OrderDAOImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/unibl/etf/GUI/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/unibl/etf/GUI/MainFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/unibl/etf/MODELS/Company.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/unibl/etf/MODELS/Company.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/unibl/etf/MODELS/Individual.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/unibl/etf/MODELS/Individual.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/unibl/etf/MODELS/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/unibl/etf/MODELS/Order.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/db/InsertCustomer.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/db/InsertCustomer.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,16 +76,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/org/unibl/etf/GUI/MainFrame.java</url>
-          <line>288</line>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
