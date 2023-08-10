@@ -38,9 +38,6 @@ public class Individual extends Customer{
 
     @Override
     public String toString() {
-        return "Individual{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                '}';
+        return firstName +" "+ lastName;
     }
 }

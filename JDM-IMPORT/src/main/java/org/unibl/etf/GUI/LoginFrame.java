@@ -1,6 +1,8 @@
 package org.unibl.etf.GUI;
 
+import org.mindrot.jbcrypt.BCrypt;
 import org.unibl.etf.Main;
+import org.unibl.etf.UTIL.ConnectionPool;
 
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -10,17 +12,12 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 
-import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JTextField;
-import javax.swing.JButton;
+import java.sql.*;
 
 public class LoginFrame extends JFrame {
     private JPanel contentPane;
@@ -38,7 +35,7 @@ public class LoginFrame extends JFrame {
         setContentPane(contentPane);
 
         try {
-            myPicture = ImageIO.read(new File("JDM-LOGO.png"));
+            myPicture = ImageIO.read(new File("./src/resources/img/JDM-LOGO.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,14 +82,48 @@ public class LoginFrame extends JFrame {
         LoginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //TODO Provjera u bazi da li posotoji korisnik sa tim username i passwordom
-                if(!"admin".equals(UsernameTextField.getText())){
-                    ErrorLabel.setVisible(true);
-                } else{
-                    //TODO Nova Stranica
-                    MainFrame mainFrame = new MainFrame();
-                    mainFrame.setVisible(true);
-                    Main.loginFrame.dispose();
+
+
+                var connectionPool = ConnectionPool.getInstance();
+                Connection connection = null;
+                CallableStatement statement=null;
+
+                try {
+                    connection = connectionPool.checkOut();
+
+                    // User input (replace with your own logic)
+                    String usernameInput = UsernameTextField.getText();
+                    String passwordInput = new String(PasswordTextField.getPassword());
+
+                    // Retrieve hashed password from the database
+                    String selectQuery = "SELECT Password,idEMPLOYEE FROM employee WHERE Username = ?";
+                    PreparedStatement preparedStatement = connection.prepareStatement(selectQuery);
+                    preparedStatement.setString(1, usernameInput);
+
+                    ResultSet resultSet = preparedStatement.executeQuery();
+                    if (resultSet.next()) {
+                        String hashedPasswordFromDB = resultSet.getString("Password");
+                        int idEmployee = resultSet.getInt("idEMPLOYEE");
+
+                        // Compare hashed passwords using BCrypt
+                        if (BCrypt.checkpw(passwordInput, hashedPasswordFromDB)) {
+                            Main.mainFrame = new MainFrame(idEmployee);
+                            Main.loginFrame.dispose();
+                            Main.mainFrame.setVisible(true);
+                        } else {
+                            ErrorLabel.setVisible(true);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+
+                    // Close the resources
+                    resultSet.close();
+                    preparedStatement.close();
+                    connection.close();
+                } catch (SQLException a) {
+                    a.printStackTrace();
                 }
             }
         });

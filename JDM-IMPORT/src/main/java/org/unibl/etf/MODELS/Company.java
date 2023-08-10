@@ -27,8 +27,6 @@ public class Company extends Customer{
 
     @Override
     public String toString() {
-        return "Company{" +
-                "name='" + name + '\'' +
-                '}';
+        return  name;
     }
 }

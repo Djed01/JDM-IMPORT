@@ -9,7 +9,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,8 +17,9 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -48,13 +48,10 @@ public class MainFrame extends JFrame {
     private JTextField brandTextField;
 
 
-
-
     private JTextField nameTextField;
     private JTextField surnameTextField;
     private JTextField emailTextField;
     private JTextField phoneTextField;
-
 
 
     private JTextField dateTextField;
@@ -68,7 +65,6 @@ public class MainFrame extends JFrame {
     private CarTableModel carsModel;
 
 
-
     private CustomerDAOImpl customerDAO;
     private List<Customer> customers;
     private CustomerTableModel customersModel;
@@ -79,8 +75,12 @@ public class MainFrame extends JFrame {
     private List<Order> orders;
     private OrderTableModel ordersModel;
 
+    private JComboBox customerComboBox;
+    private JComboBox carComboBox;
+    private int idEmployee;
 
-
+   // private final DefaultComboBoxModel<Car> carDefaultComboBoxModel = new DefaultComboBoxModel<>();
+   // private final DefaultComboBoxModel<Customer> customerDefaultComboBoxModel = new DefaultComboBoxModel<>();
 
 
     public void setButtonColor(JButton p) {
@@ -96,25 +96,25 @@ public class MainFrame extends JFrame {
     /**
      * Create the frame.
      */
-    public MainFrame() {
+    public MainFrame(int idEmployee) {
+        this.idEmployee = idEmployee;
 
 
         // ------------------- DATABASE CARS -------------------
         carDAO = new CarDAOImpl();
 
-        try{
+        try {
             cars = carDAO.findAll();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-
 
 
         this.setTitle("JDM-IMPORT");
         BufferedImage myPicture = null;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 998, 567);
+        setBounds(100, 100, 1100, 567);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(null);
@@ -144,6 +144,7 @@ public class MainFrame extends JFrame {
             public void mouseEntered(MouseEvent e) {
                 setButtonColor(CarsButton);
             }
+
             @Override
             public void mouseExited(MouseEvent e) {
                 resetButtonColor(CarsButton);
@@ -167,6 +168,7 @@ public class MainFrame extends JFrame {
             public void mouseEntered(MouseEvent e) {
                 setButtonColor(OrdersButton);
             }
+
             @Override
             public void mouseExited(MouseEvent e) {
                 resetButtonColor(OrdersButton);
@@ -187,6 +189,7 @@ public class MainFrame extends JFrame {
             public void mouseEntered(MouseEvent e) {
                 setButtonColor(CustomersButton);
             }
+
             @Override
             public void mouseExited(MouseEvent e) {
                 resetButtonColor(CustomersButton);
@@ -207,6 +210,7 @@ public class MainFrame extends JFrame {
             public void mouseEntered(MouseEvent e) {
                 setButtonColor(ExitButton);
             }
+
             @Override
             public void mouseExited(MouseEvent e) {
                 resetButtonColor(ExitButton);
@@ -222,9 +226,8 @@ public class MainFrame extends JFrame {
         MenuPanel.add(ExitButton);
 
 
-
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-        tabbedPane.setBounds(195, -25, 790, 557);
+        tabbedPane.setBounds(195, -25, 892, 557);
         contentPane.add(tabbedPane);
 
         JPanel CarsTabbedPane = new JPanel();
@@ -238,11 +241,9 @@ public class MainFrame extends JFrame {
         this.carsModel = new CarTableModel();
         carsTable.setModel(carsModel);
         JScrollPane carsTableScrollPane = new JScrollPane(carsTable);
-        carsTableScrollPane.setPreferredSize(new Dimension(740, 200));
-        carsTableScrollPane.setBounds(20,300,740, 200);
+        carsTableScrollPane.setPreferredSize(new Dimension(842, 200));
+        carsTableScrollPane.setBounds(20, 300, 842, 200);
         CarsTabbedPane.add(carsTableScrollPane);
-
-
 
 
         JButton addCarButton = new JButton("Add");
@@ -266,6 +267,7 @@ public class MainFrame extends JFrame {
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+                carComboBox.addItem(car);
             }
         });
 
@@ -280,29 +282,30 @@ public class MainFrame extends JFrame {
         updateCarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    int row = carsTable.getSelectedRow();
-                    if (row == -1) {
-                        JOptionPane.showMessageDialog(null, "Select a car!", "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                    } else {
-                        Car car = carCheckAndCreate();
+                int row = carsTable.getSelectedRow();
+                if (row == -1) {
+                    JOptionPane.showMessageDialog(null, "Select a car!", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else {
+                    Car car = carCheckAndCreate();
 
-                        if(car!=null) {
+                    if (car != null) {
 
-                            int id = (int) carsTable.getValueAt(row, 0);
-                            car.setId(id);
+                        int id = (int) carsTable.getValueAt(row, 0);
+                        car.setId(id);
 
-                            try {
-                                if(carDAO.update(car)){
-                                    carsModel.updateRow(row, car);
-                                }
-                            } catch (SQLException a) {
-                                JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
-                                        JOptionPane.ERROR_MESSAGE);
+                        try {
+                            if (carDAO.update(car)) {
+                                carsModel.updateRow(row, car);
                             }
+                        } catch (SQLException a) {
+                            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 }
+                refreshCarComboBox();
+            }
         });
 
         JButton deleteCarButton = new JButton("Delete");
@@ -325,19 +328,19 @@ public class MainFrame extends JFrame {
                     int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the car?",
                             "Confirm delete", JOptionPane.YES_NO_OPTION);
                     if (result == JOptionPane.YES_OPTION) {
-                    Car car = carsModel.getAt(row);
-                    try {
-                        if(carDAO.delete(car)) {
-                            carsModel.deleteRow(row);
+                        Car car = carsModel.getAt(row);
+                        try {
+                            if (carDAO.delete(car)) {
+                                carsModel.deleteRow(row);
+                            }
+                        } catch (SQLException a) {
+                            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                            return;
                         }
-                    } catch (SQLException a) {
-                        JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
-                                JOptionPane.ERROR_MESSAGE);
-                        return;
                     }
                 }
             }
-        }
         });
 
         JButton clearCarButton = new JButton("Clear");
@@ -426,25 +429,24 @@ public class MainFrame extends JFrame {
                         double price = (double) carsTable.getValueAt(selectedRow, 4);
                         String imageURL = (String) carsTable.getValueAt(selectedRow, 5);
 
-                       modelTextField.setText(model);
-                       brandTextField.setText(brand);
-                       yearTextField.setText(year);
-                       priceTextField.setText(String.valueOf(price));
-                       imageURLtextField.setText(imageURL);
+                        modelTextField.setText(model);
+                        brandTextField.setText(brand);
+                        yearTextField.setText(year);
+                        priceTextField.setText(String.valueOf(price));
+                        imageURLtextField.setText(imageURL);
                     }
                 }
             }
         });
 
 
-
         // ---------------- ORDERS -------------------------
 
         orderDAO = new OrderDAOImpl();
 
-        try{
+        try {
             orders = orderDAO.findAll();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
@@ -455,12 +457,12 @@ public class MainFrame extends JFrame {
 
         ordersTable = new JTable();
         JScrollPane ordersTableScrollPane = new JScrollPane(ordersTable);
-        ordersTableScrollPane.setPreferredSize(new Dimension(740, 200));
-        ordersTableScrollPane.setBounds(20,300,740, 200);
+        ordersTableScrollPane.setPreferredSize(new Dimension(842, 200));
+        ordersTableScrollPane.setBounds(20, 300, 842, 200);
         this.ordersModel = new OrderTableModel();
         ordersTable.setModel(ordersModel);
-
         OrdersPanel.add(ordersTableScrollPane);
+
 
         JButton addOrderButton = new JButton("Add");
         addOrderButton.setBackground(Color.GREEN);
@@ -470,6 +472,22 @@ public class MainFrame extends JFrame {
         addOrderButton.setVerticalTextPosition(SwingConstants.CENTER);
         OrdersPanel.add(addOrderButton);
 
+        addOrderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Order order = orderCheckAndCreate();
+
+                if(order != null){
+                    try {
+                        order = orderDAO.insert(order);
+                        ordersModel.addRow(order);
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+
         JButton updateOrderButton = new JButton("Update");
         updateOrderButton.setBackground(new Color(30, 144, 255));
         updateOrderButton.setBounds(599, 63, 133, 58);
@@ -477,6 +495,28 @@ public class MainFrame extends JFrame {
         updateOrderButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         updateOrderButton.setVerticalTextPosition(SwingConstants.CENTER);
         OrdersPanel.add(updateOrderButton);
+
+        updateOrderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = ordersTable.getSelectedRow();
+                if (row == -1) {
+                    JOptionPane.showMessageDialog(null, "Morate selektovati red u tabeli", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else {
+                    Order order = orderCheckAndCreate();
+                    if (order != null) {
+                        try {
+                            order.setId((int) ordersTable.getValueAt(row, 0));
+                            order = orderDAO.update(order);
+                            ordersModel.updateRow(row, order);
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            }
+        });
 
         JButton deleteOrderButton = new JButton("Delete");
         deleteOrderButton.setBackground(Color.RED);
@@ -486,6 +526,33 @@ public class MainFrame extends JFrame {
         deleteOrderButton.setVerticalTextPosition(SwingConstants.CENTER);
         OrdersPanel.add(deleteOrderButton);
 
+        deleteOrderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int row = ordersTable.getSelectedRow();
+                if (row == -1) {
+                    JOptionPane.showMessageDialog(null, "Morate selektovati red u tabeli", "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                } else {
+                    int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this order?",
+                            "Confirm delete", JOptionPane.YES_NO_OPTION);
+                    if (result == JOptionPane.YES_OPTION) {
+                        int selectedRow = ordersTable.getSelectedRow();
+                        if (selectedRow != -1) { // Ensure a row is selected
+                            // Get the data from the selected row
+                            int id = (int) ordersTable.getValueAt(selectedRow, 0);
+                            try {
+                                orderDAO.delete(id);
+                                ordersModel.deleteRow(selectedRow);
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
         JButton clearOrderButton = new JButton("Clear");
         clearOrderButton.setBackground(Color.YELLOW);
         clearOrderButton.setBounds(599, 170, 133, 58);
@@ -494,16 +561,13 @@ public class MainFrame extends JFrame {
         clearOrderButton.setVerticalTextPosition(SwingConstants.CENTER);
         OrdersPanel.add(clearOrderButton);
 
-        JLabel DateLabel = new JLabel("Date:");
-        DateLabel.setForeground(Color.BLACK);
-        DateLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-        DateLabel.setBounds(58, 119, 46, 14);
-        OrdersPanel.add(DateLabel);
+        clearOrderButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                clearOrderFields();
+            }
+        });
 
-        dateTextField = new JTextField();
-        dateTextField.setColumns(10);
-        dateTextField.setBounds(163, 113, 150, 30);
-        OrdersPanel.add(dateTextField);
 
         JLabel lblDeliveryDate = new JLabel("Delivery date:");
         lblDeliveryDate.setForeground(Color.BLACK);
@@ -516,16 +580,6 @@ public class MainFrame extends JFrame {
         deliveryDateTextField.setBounds(163, 152, 150, 30);
         OrdersPanel.add(deliveryDateTextField);
 
-        JLabel lblOrderTotal = new JLabel("Order total:");
-        lblOrderTotal.setForeground(Color.BLACK);
-        lblOrderTotal.setFont(new Font("Tahoma", Font.BOLD, 14));
-        lblOrderTotal.setBounds(58, 242, 99, 14);
-        OrdersPanel.add(lblOrderTotal);
-
-        orderTotalTextField = new JTextField();
-        orderTotalTextField.setColumns(10);
-        orderTotalTextField.setBounds(163, 236, 150, 30);
-        OrdersPanel.add(orderTotalTextField);
 
         JLabel lblNewLabel = new JLabel("Customer:");
         lblNewLabel.setForeground(Color.BLACK);
@@ -539,13 +593,9 @@ public class MainFrame extends JFrame {
         lblCar.setBounds(58, 82, 99, 14);
         OrdersPanel.add(lblCar);
 
-        JComboBox carComboBox = new JComboBox();
+        carComboBox = new JComboBox(cars.toArray());
         carComboBox.setBounds(163, 80, 150, 22);
         OrdersPanel.add(carComboBox);
-
-        JComboBox customerComboBox = new JComboBox();
-        customerComboBox.setBounds(163, 47, 150, 22);
-        OrdersPanel.add(customerComboBox);
 
         JLabel QuantitiyLabel = new JLabel("Quantity:");
         QuantitiyLabel.setForeground(Color.BLACK);
@@ -558,6 +608,58 @@ public class MainFrame extends JFrame {
         quantityTextField.setBounds(163, 193, 150, 30);
         OrdersPanel.add(quantityTextField);
 
+        ordersTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) { // Single-click event
+                    int selectedRow = ordersTable.getSelectedRow();
+                    if (selectedRow != -1) { // Ensure a row is selected
+                        // Get the data from the selected row
+                        int id = (int) ordersTable.getValueAt(selectedRow, 0);
+                        String name = (String) ordersTable.getValueAt(selectedRow, 1);
+                        String surname = (String) ordersTable.getValueAt(selectedRow, 2);
+                        String companyName = (String) ordersTable.getValueAt(selectedRow, 3);
+                        String brand = (String) ordersTable.getValueAt(selectedRow, 6);
+                        String model = (String) ordersTable.getValueAt(selectedRow, 7);
+                        String year = (String) ordersTable.getValueAt(selectedRow, 8);
+                        int quantity = (int) ordersTable.getValueAt(selectedRow, 9);
+                        String deliveryDate = (String) ordersTable.getValueAt(selectedRow, 12);
+
+
+                        // Select the customer in the combobox
+                        for(int i=0; i < customerComboBox.getItemCount();i++){
+                            Customer customer = (Customer) customerComboBox.getItemAt(i);
+                            if(customer instanceof Individual){
+                                if(((Individual)customer).getFirstName().equals(name) && ((Individual)customer).getLastName().equals(surname)){
+                                    customerComboBox.setSelectedIndex(i);
+                                    break;
+                                }
+                            }else if(customer instanceof Company){
+                                if(((Company)customer).getName().equals(companyName)){
+                                    customerComboBox.setSelectedIndex(i);
+                                    break;
+                                }
+                            }
+                        }
+
+                        // Select the car in the combobox
+                        for(int i=0; i < carComboBox.getItemCount();i++){
+                            Car car = (Car) carComboBox.getItemAt(i);
+                            if(car.getBrand().equals(brand) && car.getModel().equals(model)){
+                                carComboBox.setSelectedIndex(i);
+                                break;
+                            }
+                        }
+
+                        SwingUtilities.invokeLater(() -> {
+                        quantityTextField.setText(quantity+"");
+                        deliveryDateTextField.setText(deliveryDate);
+                        });
+                    }
+                }
+            }
+        });
+
         displayOrders();
 
 
@@ -565,11 +667,17 @@ public class MainFrame extends JFrame {
 
         customerDAO = new CustomerDAOImpl();
 
-        try{
+        try {
             customers = customerDAO.findAll();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        // ------------------- ORDER COMBOBOX ---------------------------
+        customerComboBox = new JComboBox(customers.toArray());
+        customerComboBox.setBounds(163, 47, 150, 22);
+        OrdersPanel.add(customerComboBox);
+        // ------------------- ORDER COMBOBOX ---------------------------
 
         JPanel CustomersPanel = new JPanel();
         CustomersPanel.setLayout(null);
@@ -580,8 +688,8 @@ public class MainFrame extends JFrame {
         this.customersModel = new CustomerTableModel();
         customersTable.setModel(customersModel);
         JScrollPane customersTableScrollPane = new JScrollPane(customersTable);
-        customersTableScrollPane.setPreferredSize(new Dimension(740, 200));
-        customersTableScrollPane.setBounds(20,300,740, 200);
+        customersTableScrollPane.setPreferredSize(new Dimension(842, 200));
+        customersTableScrollPane.setBounds(20, 300, 842, 200);
         CustomersPanel.add(customersTableScrollPane);
 
         JButton addCustomerButton = new JButton("Add");
@@ -598,12 +706,13 @@ public class MainFrame extends JFrame {
                 Customer customer = customerCheckAndCreate();
                 if (customer != null)
                     try {
-                        customerDAO.insert(customer,typeComboBox.getSelectedItem().toString());
+                        customerDAO.insert(customer, typeComboBox.getSelectedItem().toString(),idEmployee);
                         customersModel.addRow(customer);
                     } catch (SQLException a) {
                         JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                     }
+                customerComboBox.addItem(customer);
             }
         });
 
@@ -628,7 +737,7 @@ public class MainFrame extends JFrame {
                     if (customer != null) {
                         int id = (int) customersTable.getValueAt(row, 0);
                         try {
-                            customerDAO.update(customer,id);
+                            customerDAO.update(customer, id);
                             customersModel.updateRow(row, customer);
                         } catch (SQLException a) {
                             JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
@@ -639,6 +748,7 @@ public class MainFrame extends JFrame {
                         }
                     }
                 }
+                refreshCustomerComboBox();
             }
         });
 
@@ -763,10 +873,10 @@ public class MainFrame extends JFrame {
                         String name = (String) customersTable.getValueAt(selectedRow, 1);
                         String surname = (String) customersTable.getValueAt(selectedRow, 2);
 
-                        if(surname == null) {
-                             name = (String) customersTable.getValueAt(selectedRow, 3);
-                             typeComboBox.setSelectedItem("Company");
-                        }else{
+                        if (surname == null) {
+                            name = (String) customersTable.getValueAt(selectedRow, 3);
+                            typeComboBox.setSelectedItem("Company");
+                        } else {
                             typeComboBox.setSelectedItem("Individual");
                         }
 
@@ -796,16 +906,15 @@ public class MainFrame extends JFrame {
         });
 
 
-
         typeComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(typeComboBox.getSelectedItem().equals("Individual")){
+                if (typeComboBox.getSelectedItem().equals("Individual")) {
                     nameLabel.setText("Name:");
                     surnameTextField.setEnabled(true);
                     surnameTextField.setBackground(Color.WHITE);
                     surnameLabel.setForeground(Color.BLACK);
-                }else{
+                } else {
                     nameLabel.setText("Company:");
                     surnameTextField.setEnabled(false);
                     surnameTextField.setBackground(new Color(217, 219, 219));
@@ -815,7 +924,6 @@ public class MainFrame extends JFrame {
         });
 
         displayCustomers();
-
 
 
 //        URL url = null;
@@ -863,49 +971,47 @@ public class MainFrame extends JFrame {
         });
 
 
-
-
     }
 
 
     // ---------------------------- DISPLAY METHODS ----------------------------
     private void displayCars() {
-            try {
-                this.cars = this.carDAO.findAll();
-                SwingUtilities.invokeLater(() -> {
-                    cars.stream().forEach(car ->carsModel .addRow(car));
-                });
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+        try {
+            this.cars = this.carDAO.findAll();
+            SwingUtilities.invokeLater(() -> {
+                cars.stream().forEach(car -> carsModel.addRow(car));
+            });
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
 
-        private void displayCustomers(){
-            try {
-                this.customers = this.customerDAO.findAll();
-                SwingUtilities.invokeLater(() -> {
-                    customers.stream().forEach(customer ->customersModel .addRow(customer));
-                });
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+    private void displayCustomers() {
+        try {
+            this.customers = this.customerDAO.findAll();
+            SwingUtilities.invokeLater(() -> {
+                customers.stream().forEach(customer -> customersModel.addRow(customer));
+            });
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
 
-        private void displayOrders(){
-            try {
-                this.orders = this.orderDAO.findAll();
-                SwingUtilities.invokeLater(() -> {
-                    orders.stream().forEach(order ->ordersModel .addRow(order));
-                });
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-            }
+    private void displayOrders() {
+        try {
+            this.orders = this.orderDAO.findAll();
+            SwingUtilities.invokeLater(() -> {
+                orders.stream().forEach(order -> ordersModel.addRow(order));
+            });
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
 
-        //---------------------------- CHECK AND CREATE METHODS ----------------------------
+    //---------------------------- CHECK AND CREATE METHODS ----------------------------
 
     private Car carCheckAndCreate() {
         String brand = brandTextField.getText();
@@ -970,12 +1076,33 @@ public class MainFrame extends JFrame {
 
         if ("Individual".equals(type)) {
             return new Individual(name, surname, email, phone);
-        } else if ("Company".equals(type)){
+        } else if ("Company".equals(type)) {
             return new Company(name, email, phone);
-        }else {
+        } else {
             return null;
         }
 
+    }
+
+
+    private Order orderCheckAndCreate(){
+        Car car = (Car) carComboBox.getSelectedItem();
+        Customer customer = (Customer) customerComboBox.getSelectedItem();
+
+        String quantity = quantityTextField.getText();
+        if (quantity.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Insert the quantity", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        String deliveryDate = deliveryDateTextField.getText();
+        if (deliveryDate.isBlank()) {
+            JOptionPane.showMessageDialog(null, "Insert the delivery date", "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        return new Order(customer,car, LocalDate.now().toString(), deliveryDateTextField.getText(), Integer.parseInt(quantityTextField.getText()),
+                ((Car)carComboBox.getSelectedItem()).getPrice() * Integer.parseInt(quantityTextField.getText()));
     }
 
 
@@ -989,12 +1116,42 @@ public class MainFrame extends JFrame {
         imageURLtextField.setText("");
     }
 
-    private void clearCustomerFields(){
+    private void clearCustomerFields() {
         typeComboBox.setEnabled(true);
         typeComboBox.setSelectedIndex(0);
         nameTextField.setText("");
         surnameTextField.setText("");
         emailTextField.setText("");
         phoneTextField.setText("");
+    }
+
+    private void clearOrderFields() {
+        carComboBox.setSelectedIndex(0);
+        customerComboBox.setSelectedIndex(0);
+        quantityTextField.setText("");
+        deliveryDateTextField.setText("");
+    }
+
+
+    private void refreshCarComboBox(){
+        carComboBox.removeAllItems();
+        try {
+            this.cars = this.carDAO.findAll();
+            cars.stream().forEach(car -> carComboBox.addItem(car));
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void refreshCustomerComboBox(){
+        customerComboBox.removeAllItems();
+        try {
+            this.customers = this.customerDAO.findAll();
+            customers.stream().forEach(customer -> customerComboBox.addItem(customer));
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

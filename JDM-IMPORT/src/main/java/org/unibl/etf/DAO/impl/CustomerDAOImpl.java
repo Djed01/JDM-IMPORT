@@ -15,10 +15,7 @@ import java.util.List;
 public class CustomerDAOImpl implements CustomerDAO {
     @Override
     public List<Customer> findAll() throws SQLException {
-        String query = "SELECT idCustomer, FirstName, LastName, CompanyName, Email, Phone\n" +
-                "FROM (customer c\n" +
-                "LEFT JOIN individual i ON c.idCustomer = i.CUSTOMER_idCustomer\n" +
-                "LEFT JOIN company co ON c.idCustomer = co.CUSTOMER_idCustomer);";
+        String query = "select * from CustomerView";
 
         var connectionPool = ConnectionPool.getInstance();
         Connection connection = null;
@@ -45,7 +42,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public Customer insert(Customer customer,String type)throws SQLException {
+    public Customer insert(Customer customer,String type,int idEmployee)throws SQLException {
 
         String query="{call InsertCustomer(?,?,?,?,?,?,?)}";
 
@@ -84,11 +81,13 @@ public class CustomerDAOImpl implements CustomerDAO {
             // Retrieve the generated ID
             int generatedId = statement.getInt(7);
             customer.setId(generatedId);
+            insertRegisterData(customer.getId(),idEmployee);
         }
         finally {
             connectionPool.checkIn(connection);
             DBUtil.close(statement);
         }
+
         return customer;
     }
 
@@ -146,4 +145,39 @@ public class CustomerDAOImpl implements CustomerDAO {
         }
         return status;
     }
+
+
+    private void insertRegisterData(int idCustomer,int idEmployee){
+        String query="{call InsertRegisterRecord(?,?)}";
+
+        var connectionPool = ConnectionPool.getInstance();
+        Connection connection = null;
+        CallableStatement statement=null;
+        try {
+            connection=connectionPool.checkOut();
+            statement=connection.prepareCall(query);
+
+            statement.setInt(1,idEmployee);
+            statement.setInt(2,idCustomer);
+
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted == 0) {
+                throw new SQLException("Failed to insert the register record.");
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            connectionPool.checkIn(connection);
+            try {
+                DBUtil.close(statement);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+
 }

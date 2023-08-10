@@ -13,7 +13,7 @@ import java.util.Locale;
 public class OrderDAOImpl implements OrderDAO {
     @Override
     public List<Order> findAll()throws SQLException{
-        String query = "{call GetCustomerOrderDetails()}";
+        String query = "select * from CustomerOrderDetailsView";
 
         var connectionPool = ConnectionPool.getInstance();
         Connection connection = null;
@@ -47,5 +47,84 @@ public class OrderDAOImpl implements OrderDAO {
         return results;
     }
 
+
+    @Override
+    public Order insert(Order order)throws SQLException{
+        String query="{call InsertOrder(?,?,?,?,?)}";
+
+        var connectionPool = ConnectionPool.getInstance();
+        Connection connection = null;
+        CallableStatement statement=null;
+        try {
+            connection=connectionPool.checkOut();
+            statement=connection.prepareCall(query);
+            statement.setString(1,order.getDeliveryDate());
+            statement.setInt(2,order.getCustomer().getId());
+            statement.setInt(3,order.getCar().getId());
+            statement.setInt(4,order.getQuantity());
+            statement.setNull(5, Types.INTEGER);
+
+            statement.registerOutParameter(5, Types.INTEGER);
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted == 0) {
+                throw new SQLException("Failed to insert the customer record.");
+            }
+
+            // Retrieve the generated ID
+            int generatedId = statement.getInt(5);
+            order.setId(generatedId);
+        }finally {
+            connectionPool.checkIn(connection);
+            DBUtil.close(statement);
+        }
+        return order;
+    }
+
+    @Override
+    public boolean delete(int id)throws SQLException{
+        String query = "{call DeleteOrder(?)}";
+        boolean status=false;
+
+        var connectionPool = ConnectionPool.getInstance();
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection=connectionPool.checkOut();
+            statement=connection.prepareStatement(query);
+            statement.setInt(1,id);
+            status=statement.executeUpdate()==1;
+        }
+        finally {
+            connectionPool.checkIn(connection);
+            DBUtil.close(statement);
+        }
+        return status;
+    }
+
+
+    @Override
+    public Order update(Order order)throws SQLException{
+        String query = "{call UpdateOrder(?,?,?,?,?)}";
+        boolean status=false;
+
+        var connectionPool = ConnectionPool.getInstance();
+        Connection connection = null;
+        PreparedStatement statement = null;
+        try {
+            connection=connectionPool.checkOut();
+            statement=connection.prepareStatement(query);
+            statement.setInt(1,order.getId());
+            statement.setString(2,order.getDeliveryDate());
+            statement.setInt(3,order.getCustomer().getId());
+            statement.setInt(4,order.getCar().getId());
+            statement.setInt(5,order.getQuantity());
+            status=statement.executeUpdate()==1;
+        }
+        finally {
+            connectionPool.checkIn(connection);
+            DBUtil.close(statement);
+        }
+        return order;
+    }
 
 }

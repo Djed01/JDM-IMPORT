@@ -12,8 +12,8 @@ import java.util.List;
 
 public class OrderTableModel extends AbstractTableModel {
     private List<Order> data;
-    private boolean[] columnEditables = new boolean[] { false, false, false, false, false, false,false, false, false, false, false};
-    private String[] header = new String[] { "Order ID", "Name", "Surname", "Company Name", "Email", "Phone","Brand","Model","Year","Quantity","Total Price"};
+    private boolean[] columnEditables = new boolean[]{false, false, false, false, false, false, false, false, false, false, false,false,false};
+    private String[] header = new String[]{"Order ID", "Name", "Surname", "Company Name", "Email", "Phone", "Brand", "Model", "Year", "Quantity", "Total Price", "Date", "Delivery Date"};
 
     public OrderTableModel() {
         this.data = new ArrayList<Order>();
@@ -34,13 +34,13 @@ public class OrderTableModel extends AbstractTableModel {
         return header.length;
     }
 
-    public List<Order> getData(){
+    public List<Order> getData() {
         return this.data;
 
     }
 
-    public void updateData(List<Order>data) {
-        this.data=data;
+    public void updateData(List<Order> data) {
+        this.data = data;
         fireTableDataChanged();
     }
 
@@ -56,15 +56,13 @@ public class OrderTableModel extends AbstractTableModel {
             case 0:
                 return obj.getId();
             case 1:
-                if(obj.getCustomer() instanceof Individual) {
-                    return ((Individual)obj.getCustomer()).getFirstName();
-                }
-                else return  null;
+                if (obj.getCustomer() instanceof Individual) {
+                    return ((Individual) obj.getCustomer()).getFirstName();
+                } else return null;
             case 2:
-                if(obj.getCustomer() instanceof Individual) {
-                    return ((Individual)obj.getCustomer()).getLastName();
-                }
-                else return  null;
+                if (obj.getCustomer() instanceof Individual) {
+                    return ((Individual) obj.getCustomer()).getLastName();
+                } else return null;
             case 3:
                 if (obj.getCustomer() instanceof Company) {
                     return ((Company) obj.getCustomer()).getName();
@@ -83,6 +81,10 @@ public class OrderTableModel extends AbstractTableModel {
                 return obj.getQuantity();
             case 10:
                 return obj.getOrderTotal();
+            case 11:
+                return obj.getDate();
+            case 12:
+                return obj.getDeliveryDate();
             default:
                 return null;
         }
