@@ -79,8 +79,8 @@ public class MainFrame extends JFrame {
     private JComboBox carComboBox;
     private int idEmployee;
 
-   // private final DefaultComboBoxModel<Car> carDefaultComboBoxModel = new DefaultComboBoxModel<>();
-   // private final DefaultComboBoxModel<Customer> customerDefaultComboBoxModel = new DefaultComboBoxModel<>();
+    // private final DefaultComboBoxModel<Car> carDefaultComboBoxModel = new DefaultComboBoxModel<>();
+    // private final DefaultComboBoxModel<Customer> customerDefaultComboBoxModel = new DefaultComboBoxModel<>();
 
 
     public void setButtonColor(JButton p) {
@@ -114,7 +114,7 @@ public class MainFrame extends JFrame {
         BufferedImage myPicture = null;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 1100, 567);
+        setBounds(100, 100, 1200, 567);
         contentPane = new JPanel();
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         contentPane.setLayout(null);
@@ -227,7 +227,7 @@ public class MainFrame extends JFrame {
 
 
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-        tabbedPane.setBounds(195, -25, 892, 557);
+        tabbedPane.setBounds(195, -25, 992, 557);
         contentPane.add(tabbedPane);
 
         JPanel CarsTabbedPane = new JPanel();
@@ -241,14 +241,14 @@ public class MainFrame extends JFrame {
         this.carsModel = new CarTableModel();
         carsTable.setModel(carsModel);
         JScrollPane carsTableScrollPane = new JScrollPane(carsTable);
-        carsTableScrollPane.setPreferredSize(new Dimension(842, 200));
-        carsTableScrollPane.setBounds(20, 300, 842, 200);
+        carsTableScrollPane.setPreferredSize(new Dimension(942, 200));
+        carsTableScrollPane.setBounds(20, 300, 942, 200);
         CarsTabbedPane.add(carsTableScrollPane);
 
 
         JButton addCarButton = new JButton("Add");
         addCarButton.setBackground(Color.GREEN);
-        addCarButton.setBounds(431, 63, 133, 58);
+        addCarButton.setBounds(550, 53, 150, 72);
         addCarButton.setIcon(addIcon);
         addCarButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         addCarButton.setVerticalTextPosition(SwingConstants.CENTER);
@@ -273,7 +273,7 @@ public class MainFrame extends JFrame {
 
         JButton updateCarButton = new JButton("Update");
         updateCarButton.setBackground(new Color(30, 144, 255));
-        updateCarButton.setBounds(599, 63, 133, 58);
+        updateCarButton.setBounds(747, 53, 150, 72);
         updateCarButton.setIcon(updateIcon);
         updateCarButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         updateCarButton.setVerticalTextPosition(SwingConstants.CENTER);
@@ -310,7 +310,7 @@ public class MainFrame extends JFrame {
 
         JButton deleteCarButton = new JButton("Delete");
         deleteCarButton.setBackground(Color.RED);
-        deleteCarButton.setBounds(431, 170, 133, 58);
+        deleteCarButton.setBounds(550, 170, 150, 72);
         deleteCarButton.setIcon(deleteIcon);
         deleteCarButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         deleteCarButton.setVerticalTextPosition(SwingConstants.CENTER);
@@ -338,6 +338,7 @@ public class MainFrame extends JFrame {
                                     JOptionPane.ERROR_MESSAGE);
                             return;
                         }
+                        refreshCarComboBox();
                     }
                 }
             }
@@ -345,7 +346,7 @@ public class MainFrame extends JFrame {
 
         JButton clearCarButton = new JButton("Clear");
         clearCarButton.setBackground(Color.YELLOW);
-        clearCarButton.setBounds(599, 170, 133, 58);
+        clearCarButton.setBounds(747, 170, 150, 72);
         clearCarButton.setIcon(clearIcon);
         clearCarButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         clearCarButton.setVerticalTextPosition(SwingConstants.CENTER);
@@ -361,56 +362,56 @@ public class MainFrame extends JFrame {
         JLabel BrandLabel = new JLabel("Brand:");
         BrandLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
         BrandLabel.setForeground(Color.BLACK);
-        BrandLabel.setBounds(58, 83, 81, 14);
+        BrandLabel.setBounds(100, 53, 81, 14);
         CarsTabbedPane.add(BrandLabel);
 
         JLabel ModelLabel = new JLabel("Model:");
         ModelLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
         ModelLabel.setForeground(Color.BLACK);
-        ModelLabel.setBounds(58, 123, 52, 14);
+        ModelLabel.setBounds(100, 96, 52, 14);
         CarsTabbedPane.add(ModelLabel);
 
         JLabel YearLabel = new JLabel("Year:");
         YearLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
         YearLabel.setForeground(Color.BLACK);
-        YearLabel.setBounds(58, 159, 52, 23);
+        YearLabel.setBounds(100, 141, 52, 23);
         CarsTabbedPane.add(YearLabel);
 
         JLabel PriceLabel = new JLabel("Price:");
         PriceLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
         PriceLabel.setForeground(Color.BLACK);
-        PriceLabel.setBounds(58, 204, 46, 14);
+        PriceLabel.setBounds(100, 190, 46, 14);
         CarsTabbedPane.add(PriceLabel);
 
         JLabel ImageURLLabel = new JLabel("ImageURL:");
         ImageURLLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
         ImageURLLabel.setForeground(Color.BLACK);
-        ImageURLLabel.setBounds(58, 241, 90, 14);
+        ImageURLLabel.setBounds(100, 229, 90, 14);
         CarsTabbedPane.add(ImageURLLabel);
 
         imageURLtextField = new JTextField();
-        imageURLtextField.setBounds(163, 237, 150, 30);
+        imageURLtextField.setBounds(191, 223, 150, 30);
         CarsTabbedPane.add(imageURLtextField);
         imageURLtextField.setColumns(10);
 
         priceTextField = new JTextField();
         priceTextField.setColumns(10);
-        priceTextField.setBounds(163, 197, 150, 30);
+        priceTextField.setBounds(191, 179, 150, 30);
         CarsTabbedPane.add(priceTextField);
 
         yearTextField = new JTextField();
         yearTextField.setColumns(10);
-        yearTextField.setBounds(163, 157, 150, 30);
+        yearTextField.setBounds(191, 135, 150, 30);
         CarsTabbedPane.add(yearTextField);
 
         modelTextField = new JTextField();
         modelTextField.setColumns(10);
-        modelTextField.setBounds(163, 117, 150, 30);
+        modelTextField.setBounds(191, 91, 150, 30);
         CarsTabbedPane.add(modelTextField);
 
         brandTextField = new JTextField();
         brandTextField.setColumns(10);
-        brandTextField.setBounds(163, 77, 150, 30);
+        brandTextField.setBounds(191, 47, 150, 30);
         CarsTabbedPane.add(brandTextField);
 
         displayCars();
@@ -457,8 +458,8 @@ public class MainFrame extends JFrame {
 
         ordersTable = new JTable();
         JScrollPane ordersTableScrollPane = new JScrollPane(ordersTable);
-        ordersTableScrollPane.setPreferredSize(new Dimension(842, 200));
-        ordersTableScrollPane.setBounds(20, 300, 842, 200);
+        ordersTableScrollPane.setPreferredSize(new Dimension(942, 200));
+        ordersTableScrollPane.setBounds(20, 300, 942, 200);
         this.ordersModel = new OrderTableModel();
         ordersTable.setModel(ordersModel);
         OrdersPanel.add(ordersTableScrollPane);
@@ -466,7 +467,7 @@ public class MainFrame extends JFrame {
 
         JButton addOrderButton = new JButton("Add");
         addOrderButton.setBackground(Color.GREEN);
-        addOrderButton.setBounds(431, 63, 133, 58);
+        addOrderButton.setBounds(550, 53, 150, 72);
         addOrderButton.setIcon(addIcon);
         addOrderButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         addOrderButton.setVerticalTextPosition(SwingConstants.CENTER);
@@ -490,7 +491,7 @@ public class MainFrame extends JFrame {
 
         JButton updateOrderButton = new JButton("Update");
         updateOrderButton.setBackground(new Color(30, 144, 255));
-        updateOrderButton.setBounds(599, 63, 133, 58);
+        updateOrderButton.setBounds(747, 53, 150, 72);
         updateOrderButton.setIcon(updateIcon);
         updateOrderButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         updateOrderButton.setVerticalTextPosition(SwingConstants.CENTER);
@@ -520,7 +521,7 @@ public class MainFrame extends JFrame {
 
         JButton deleteOrderButton = new JButton("Delete");
         deleteOrderButton.setBackground(Color.RED);
-        deleteOrderButton.setBounds(431, 170, 133, 58);
+        deleteOrderButton.setBounds(550, 170, 150, 72);
         deleteOrderButton.setIcon(deleteIcon);
         deleteOrderButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         deleteOrderButton.setVerticalTextPosition(SwingConstants.CENTER);
@@ -555,7 +556,7 @@ public class MainFrame extends JFrame {
 
         JButton clearOrderButton = new JButton("Clear");
         clearOrderButton.setBackground(Color.YELLOW);
-        clearOrderButton.setBounds(599, 170, 133, 58);
+        clearOrderButton.setBounds(747, 170, 150, 72);
         clearOrderButton.setIcon(clearIcon);
         clearOrderButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         clearOrderButton.setVerticalTextPosition(SwingConstants.CENTER);
@@ -572,40 +573,40 @@ public class MainFrame extends JFrame {
         JLabel lblDeliveryDate = new JLabel("Delivery date:");
         lblDeliveryDate.setForeground(Color.BLACK);
         lblDeliveryDate.setFont(new Font("Tahoma", Font.BOLD, 14));
-        lblDeliveryDate.setBounds(58, 158, 99, 14);
+        lblDeliveryDate.setBounds(100, 152, 99, 14);
         OrdersPanel.add(lblDeliveryDate);
 
         deliveryDateTextField = new JTextField();
         deliveryDateTextField.setColumns(10);
-        deliveryDateTextField.setBounds(163, 152, 150, 30);
+        deliveryDateTextField.setBounds(230, 146, 150, 30);
         OrdersPanel.add(deliveryDateTextField);
 
 
         JLabel lblNewLabel = new JLabel("Customer:");
         lblNewLabel.setForeground(Color.BLACK);
         lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-        lblNewLabel.setBounds(58, 49, 99, 14);
+        lblNewLabel.setBounds(100, 53, 99, 14);
         OrdersPanel.add(lblNewLabel);
 
         JLabel lblCar = new JLabel("Car:");
         lblCar.setForeground(Color.BLACK);
         lblCar.setFont(new Font("Tahoma", Font.BOLD, 14));
-        lblCar.setBounds(58, 82, 99, 14);
+        lblCar.setBounds(100, 101, 99, 14);
         OrdersPanel.add(lblCar);
 
         carComboBox = new JComboBox(cars.toArray());
-        carComboBox.setBounds(163, 80, 150, 22);
+        carComboBox.setBounds(230, 95, 150, 30);
         OrdersPanel.add(carComboBox);
 
         JLabel QuantitiyLabel = new JLabel("Quantity:");
         QuantitiyLabel.setForeground(Color.BLACK);
         QuantitiyLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-        QuantitiyLabel.setBounds(58, 200, 99, 14);
+        QuantitiyLabel.setBounds(100, 204, 99, 14);
         OrdersPanel.add(QuantitiyLabel);
 
         quantityTextField = new JTextField();
         quantityTextField.setColumns(10);
-        quantityTextField.setBounds(163, 193, 150, 30);
+        quantityTextField.setBounds(230, 198, 150, 30);
         OrdersPanel.add(quantityTextField);
 
         ordersTable.addMouseListener(new MouseAdapter() {
@@ -652,8 +653,8 @@ public class MainFrame extends JFrame {
                         }
 
                         SwingUtilities.invokeLater(() -> {
-                        quantityTextField.setText(quantity+"");
-                        deliveryDateTextField.setText(deliveryDate);
+                            quantityTextField.setText(quantity+"");
+                            deliveryDateTextField.setText(deliveryDate);
                         });
                     }
                 }
@@ -675,7 +676,7 @@ public class MainFrame extends JFrame {
 
         // ------------------- ORDER COMBOBOX ---------------------------
         customerComboBox = new JComboBox(customers.toArray());
-        customerComboBox.setBounds(163, 47, 150, 22);
+        customerComboBox.setBounds(230, 47, 150, 30);
         OrdersPanel.add(customerComboBox);
         // ------------------- ORDER COMBOBOX ---------------------------
 
@@ -688,13 +689,13 @@ public class MainFrame extends JFrame {
         this.customersModel = new CustomerTableModel();
         customersTable.setModel(customersModel);
         JScrollPane customersTableScrollPane = new JScrollPane(customersTable);
-        customersTableScrollPane.setPreferredSize(new Dimension(842, 200));
-        customersTableScrollPane.setBounds(20, 300, 842, 200);
+        customersTableScrollPane.setPreferredSize(new Dimension(942, 200));
+        customersTableScrollPane.setBounds(20, 300, 942, 200);
         CustomersPanel.add(customersTableScrollPane);
 
         JButton addCustomerButton = new JButton("Add");
         addCustomerButton.setBackground(Color.GREEN);
-        addCustomerButton.setBounds(431, 63, 133, 58);
+        addCustomerButton.setBounds(550, 53, 150, 72);
         addCustomerButton.setIcon(addIcon);
         addCustomerButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         addCustomerButton.setVerticalTextPosition(SwingConstants.CENTER);
@@ -718,7 +719,7 @@ public class MainFrame extends JFrame {
 
         JButton updateCustomerButton = new JButton("Update");
         updateCustomerButton.setBackground(new Color(30, 144, 255));
-        updateCustomerButton.setBounds(599, 63, 133, 58);
+        updateCustomerButton.setBounds(747, 53, 150, 72);
         updateCustomerButton.setIcon(updateIcon);
         updateCustomerButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         updateCustomerButton.setVerticalTextPosition(SwingConstants.CENTER);
@@ -738,6 +739,7 @@ public class MainFrame extends JFrame {
                         int id = (int) customersTable.getValueAt(row, 0);
                         try {
                             customerDAO.update(customer, id);
+                            customer.setId(id);
                             customersModel.updateRow(row, customer);
                         } catch (SQLException a) {
                             JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
@@ -754,7 +756,7 @@ public class MainFrame extends JFrame {
 
         JButton deleteCustomerButton = new JButton("Delete");
         deleteCustomerButton.setBackground(Color.RED);
-        deleteCustomerButton.setBounds(431, 170, 133, 58);
+        deleteCustomerButton.setBounds(550, 170, 150, 72);
         deleteCustomerButton.setIcon(deleteIcon);
         deleteCustomerButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         deleteCustomerButton.setVerticalTextPosition(SwingConstants.CENTER);
@@ -783,6 +785,7 @@ public class MainFrame extends JFrame {
                             System.err.println("SQL State: " + a.getSQLState());
                             System.err.println("Message: " + a.getMessage());
                         }
+                        refreshCustomerComboBox();
                     }
                 }
             }
@@ -790,7 +793,7 @@ public class MainFrame extends JFrame {
 
         JButton clearCustomerButton = new JButton("Clear");
         clearCustomerButton.setBackground(Color.YELLOW);
-        clearCustomerButton.setBounds(599, 170, 133, 58);
+        clearCustomerButton.setBounds(747, 170, 150, 72);
         clearCustomerButton.setIcon(clearIcon);
         clearCustomerButton.setHorizontalTextPosition(SwingConstants.RIGHT);
         clearCustomerButton.setVerticalTextPosition(SwingConstants.CENTER);
@@ -806,59 +809,59 @@ public class MainFrame extends JFrame {
         JLabel typeLabel = new JLabel("Type:");
         typeLabel.setForeground(Color.BLACK);
         typeLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-        typeLabel.setBounds(58, 63, 62, 14);
+        typeLabel.setBounds(100, 53, 62, 14);
         CustomersPanel.add(typeLabel);
 
         typeComboBox = new JComboBox();
         typeComboBox.addItem("Individual");
         typeComboBox.addItem("Company");
         typeComboBox.setToolTipText("");
-        typeComboBox.setBounds(163, 61, 150, 22);
+        typeComboBox.setBounds(191, 47, 150, 30);
         CustomersPanel.add(typeComboBox);
 
 
         JLabel nameLabel = new JLabel("Name:");
         nameLabel.setForeground(Color.BLACK);
         nameLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-        nameLabel.setBounds(58, 100, 85, 17);
+        nameLabel.setBounds(100, 96, 85, 17);
         CustomersPanel.add(nameLabel);
 
         nameTextField = new JTextField();
         nameTextField.setColumns(10);
-        nameTextField.setBounds(163, 94, 150, 30);
+        nameTextField.setBounds(191, 91, 150, 30);
         CustomersPanel.add(nameTextField);
 
         JLabel surnameLabel = new JLabel("Surname:");
         surnameLabel.setForeground(Color.BLACK);
         surnameLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-        surnameLabel.setBounds(58, 141, 77, 14);
+        surnameLabel.setBounds(100, 141, 77, 14);
         CustomersPanel.add(surnameLabel);
 
         surnameTextField = new JTextField();
         surnameTextField.setColumns(10);
-        surnameTextField.setBounds(163, 135, 150, 30);
+        surnameTextField.setBounds(191, 135, 150, 30);
         CustomersPanel.add(surnameTextField);
 
         JLabel emailLabel = new JLabel("Email:");
         emailLabel.setForeground(Color.BLACK);
         emailLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-        emailLabel.setBounds(58, 182, 77, 14);
+        emailLabel.setBounds(100, 190, 77, 14);
         CustomersPanel.add(emailLabel);
 
         JLabel phoneLabel = new JLabel("Phone:");
         phoneLabel.setForeground(Color.BLACK);
         phoneLabel.setFont(new Font("Tahoma", Font.BOLD, 14));
-        phoneLabel.setBounds(58, 221, 77, 14);
+        phoneLabel.setBounds(100, 229, 77, 14);
         CustomersPanel.add(phoneLabel);
 
         emailTextField = new JTextField();
         emailTextField.setColumns(10);
-        emailTextField.setBounds(163, 176, 150, 30);
+        emailTextField.setBounds(191, 179, 150, 30);
         CustomersPanel.add(emailTextField);
 
         phoneTextField = new JTextField();
         phoneTextField.setColumns(10);
-        phoneTextField.setBounds(163, 215, 150, 30);
+        phoneTextField.setBounds(191, 223, 150, 30);
         CustomersPanel.add(phoneTextField);
 
         customersTable.addMouseListener(new MouseAdapter() {

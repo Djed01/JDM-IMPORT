@@ -25,6 +25,7 @@ public class LoginFrame extends JFrame {
     private JPasswordField PasswordTextField;
 
     public LoginFrame() {
+        this.setTitle("JDM-IMPORT");
         BufferedImage myPicture = null;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 900, 600);
@@ -44,6 +45,7 @@ public class LoginFrame extends JFrame {
         JLabel LogoLabel = new JLabel(new ImageIcon(newImage));
         LogoLabel.setBounds(170, 183, 300, 150); //Sets the location of the image
         contentPane.add(LogoLabel);
+        this.setIconImage(newImage);
 
         JLabel UsernameLabel = new JLabel("Username:");
         UsernameLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -114,8 +116,7 @@ public class LoginFrame extends JFrame {
                             ErrorLabel.setVisible(true);
                         }
                     } else {
-                        JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
-                                JOptionPane.ERROR_MESSAGE);
+                        ErrorLabel.setVisible(true);
                     }
 
                     // Close the resources
