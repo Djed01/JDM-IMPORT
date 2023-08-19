@@ -16,3 +16,6 @@
 **Customers Form**
 
 ![CustomersForm](https://github.com/Djed01/JDM-IMPORT/blob/main/JDM-IMPORT/src/resources/img/CustomersForm.png)
+
+**Conceptual Model**
+![ConceptualModel](https://github.com/Djed01/JDM-IMPORT/blob/main/CONCEPTUAL%20MODEL/ConceptualModel.png)
