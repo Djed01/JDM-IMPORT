@@ -6,8 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="0656fc35-2721-4063-a989-e7a4910a0e0f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/unibl/etf/GUI/LoginFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/unibl/etf/GUI/LoginFrame.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/unibl/etf/GUI/MainFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/unibl/etf/GUI/MainFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/db/CalculateTotalPriceTrigger.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/db/CalculateTotalPriceTrigger.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/db/CarUpdate.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/db/CarUpdate.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/db/CurrentDateTrigger.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/db/CurrentDateTrigger.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/db/DeleteCustomerByID.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/db/DeleteCustomerByID.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/db/DeleteOrder.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/db/DeleteOrder.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/db/InsertCustomer.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/db/InsertCustomer.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/db/InsertOrder.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/db/InsertOrder.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/db/InsertRegisterRecord.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/db/InsertRegisterRecord.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/db/UpdateCustomer.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/db/UpdateCustomer.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/resources/db/UpdateOrder.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/resources/db/UpdateOrder.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,14 +42,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="org.unibl.etf.Main" />

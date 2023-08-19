@@ -1,4 +1,4 @@
-DELIMITER //
+DELIMITER $$
 CREATE PROCEDURE UpdateOrder(
     IN orderID INT,
     IN deliveryDate VARCHAR(20),
@@ -8,7 +8,6 @@ CREATE PROCEDURE UpdateOrder(
 )
 
 BEGIN
-    -- Update the Customer table
     UPDATE `order`
     SET DeliveryDate = deliveryDate,
         CUSTOMER_idCUSTOMER = customerID
@@ -19,5 +18,5 @@ BEGIN
     ORDERABLE_CAR_idCar = carID
     WHERE ORDER_idOrder = orderID;
     
-END //
+END $$
 DELIMITER ;

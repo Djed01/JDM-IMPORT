@@ -1,5 +1,5 @@
 
-DELIMITER //
+DELIMITER $$
 
 CREATE PROCEDURE car_update(
     IN p_id INT,
@@ -20,6 +20,6 @@ BEGIN
         ImageURL = p_imageURL
     WHERE
         idCar = p_id;
-END //
+END $$
 
 DELIMITER ;

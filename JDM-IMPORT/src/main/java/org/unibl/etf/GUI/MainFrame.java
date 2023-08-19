@@ -17,7 +17,6 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
@@ -78,9 +77,6 @@ public class MainFrame extends JFrame {
     private JComboBox customerComboBox;
     private JComboBox carComboBox;
     private int idEmployee;
-
-    // private final DefaultComboBoxModel<Car> carDefaultComboBoxModel = new DefaultComboBoxModel<>();
-    // private final DefaultComboBoxModel<Customer> customerDefaultComboBoxModel = new DefaultComboBoxModel<>();
 
 
     public void setButtonColor(JButton p) {
@@ -263,7 +259,7 @@ public class MainFrame extends JFrame {
                         carDAO.insert(car);
                         carsModel.addRow(car);
                     } catch (SQLException a) {
-                        JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
+                        JOptionPane.showMessageDialog(null, "Database connection error!", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
@@ -299,7 +295,7 @@ public class MainFrame extends JFrame {
                                 carsModel.updateRow(row, car);
                             }
                         } catch (SQLException a) {
-                            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
+                            JOptionPane.showMessageDialog(null, "Database connection error!", "Error",
                                     JOptionPane.ERROR_MESSAGE);
                         }
                     }
@@ -334,7 +330,7 @@ public class MainFrame extends JFrame {
                                 carsModel.deleteRow(row);
                             }
                         } catch (SQLException a) {
-                            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
+                            JOptionPane.showMessageDialog(null, "Database connection error!", "Error",
                                     JOptionPane.ERROR_MESSAGE);
                             return;
                         }
@@ -502,7 +498,7 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int row = ordersTable.getSelectedRow();
                 if (row == -1) {
-                    JOptionPane.showMessageDialog(null, "Morate selektovati red u tabeli", "Error",
+                    JOptionPane.showMessageDialog(null, "Select a row", "Error",
                             JOptionPane.ERROR_MESSAGE);
                 } else {
                     Order order = orderCheckAndCreate();
@@ -532,7 +528,7 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int row = ordersTable.getSelectedRow();
                 if (row == -1) {
-                    JOptionPane.showMessageDialog(null, "Morate selektovati red u tabeli", "Error",
+                    JOptionPane.showMessageDialog(null, "Select a row.", "Error",
                             JOptionPane.ERROR_MESSAGE);
                 } else {
                     int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this order?",
@@ -710,7 +706,7 @@ public class MainFrame extends JFrame {
                         customerDAO.insert(customer, typeComboBox.getSelectedItem().toString(),idEmployee);
                         customersModel.addRow(customer);
                     } catch (SQLException a) {
-                        JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
+                        JOptionPane.showMessageDialog(null, "Database connection error!", "Error",
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 customerComboBox.addItem(customer);
@@ -731,7 +727,7 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int row = customersTable.getSelectedRow();
                 if (row == -1) {
-                    JOptionPane.showMessageDialog(null, "Morate selektovati red u tabeli", "Error",
+                    JOptionPane.showMessageDialog(null, "Select a row", "Error",
                             JOptionPane.ERROR_MESSAGE);
                 } else {
                     Customer customer = customerCheckAndCreate();
@@ -742,7 +738,7 @@ public class MainFrame extends JFrame {
                             customer.setId(id);
                             customersModel.updateRow(row, customer);
                         } catch (SQLException a) {
-                            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
+                            JOptionPane.showMessageDialog(null, "Database connection error!", "Error",
                                     JOptionPane.ERROR_MESSAGE);
                             System.out.println("Error Code: " + a.getErrorCode());
                             System.out.println("SQL State: " + a.getSQLState());
@@ -767,7 +763,7 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 int row = customersTable.getSelectedRow();
                 if (row == -1) {
-                    JOptionPane.showMessageDialog(null, "Morate selektovati red u tabeli", "Error",
+                    JOptionPane.showMessageDialog(null, "Select a row", "Error",
                             JOptionPane.ERROR_MESSAGE);
                 } else {
                     int result = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete the customer?",
@@ -778,7 +774,7 @@ public class MainFrame extends JFrame {
                             customerDAO.delete(id);
                             customersModel.deleteRow(row);
                         } catch (SQLException a) {
-                            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka", "Error",
+                            JOptionPane.showMessageDialog(null, "Database connection error!", "Error",
                                     JOptionPane.ERROR_MESSAGE);
                             System.err.println("SQL Exception:");
                             System.err.println("Error Code: " + a.getErrorCode());
@@ -928,26 +924,7 @@ public class MainFrame extends JFrame {
 
         displayCustomers();
 
-
-//        URL url = null;
-//        try {
-//            url = new URL("https://www.motortrend.com/uploads/sites/10/2015/11/2016-nissan-gtr-premium-coupe-angular-front.png");
-//        } catch (MalformedURLException e1) {
-//            // TODO Auto-generated catch block
-//            e1.printStackTrace();
-//        }
-//        BufferedImage image=null;
-//        try {
-//            image = ImageIO.read(url);
-//        } catch (IOException e1) {
-//            // TODO Auto-generated catch block
-//            e1.printStackTrace();
-//        }
-//        Image scaledImage = image.getScaledInstance(175, 90, Image.SCALE_DEFAULT);
-//        JLabel label = new JLabel(new ImageIcon(scaledImage));
-//        label.setBounds(10, 400, 175, 90);
-//        MenuPanel.add(label);
-
+        
 
         CarsButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -985,7 +962,7 @@ public class MainFrame extends JFrame {
                 cars.stream().forEach(car -> carsModel.addRow(car));
             });
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",
+            JOptionPane.showMessageDialog(null, "Database connection error!",
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -997,7 +974,7 @@ public class MainFrame extends JFrame {
                 customers.stream().forEach(customer -> customersModel.addRow(customer));
             });
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",
+            JOptionPane.showMessageDialog(null, "Database connection error!",
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -1009,7 +986,7 @@ public class MainFrame extends JFrame {
                 orders.stream().forEach(order -> ordersModel.addRow(order));
             });
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",
+            JOptionPane.showMessageDialog(null, "Database connection error!",
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -1142,7 +1119,7 @@ public class MainFrame extends JFrame {
             this.cars = this.carDAO.findAll();
             cars.stream().forEach(car -> carComboBox.addItem(car));
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",
+            JOptionPane.showMessageDialog(null, "Database connection error!",
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -1153,7 +1130,7 @@ public class MainFrame extends JFrame {
             this.customers = this.customerDAO.findAll();
             customers.stream().forEach(customer -> customerComboBox.addItem(customer));
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null, "Došlo je do greške prilikom komunikacije sa bazom podataka",
+            JOptionPane.showMessageDialog(null, "Database connection error!",
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }

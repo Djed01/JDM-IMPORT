@@ -1,9 +1,8 @@
-DELIMITER //
+DELIMITER $$
 CREATE PROCEDURE DeleteOrder(IN target_id INT)
 BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        -- Error handling if needed
         ROLLBACK;
     END;
 
@@ -13,6 +12,6 @@ BEGIN
     DELETE FROM `order` WHERE idOrder = target_id;
 
     COMMIT;
-END;
-//
+END
+$$
 DELIMITER ;

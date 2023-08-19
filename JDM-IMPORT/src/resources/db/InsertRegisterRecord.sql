@@ -1,4 +1,5 @@
-CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertRegisterRecord`(
+DELIMITER $$
+CREATE PROCEDURE `InsertRegisterRecord`(
     IN employeeId INT,
     IN customerId INT
 )
@@ -12,3 +13,5 @@ BEGIN
         SET MESSAGE_TEXT = 'Invalid employeeId or customerId';
     END IF;
 END
+$$
+DELIMITER ;

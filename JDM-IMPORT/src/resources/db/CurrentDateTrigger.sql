@@ -1,9 +1,9 @@
-DELIMITER //
+DELIMITER $$
 CREATE TRIGGER insertCurrentDate
 BEFORE INSERT ON `order`
 FOR EACH ROW
 BEGIN
     SET NEW.Date = NOW();
-END;
-//
+END
+$$
 DELIMITER ;
