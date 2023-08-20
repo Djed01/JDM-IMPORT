@@ -266,9 +266,6 @@ BEGIN
 END $$
 DELIMITER ;
 
--- Dodavanje admin naloga --
-INSERT INTO employee (FirstName,LastName,Email,Phone,Address,City,PostCode,Username, Password) VALUES ('admin', 'admin','admin@mail.com','066-123-456','Adresa','Grad','78000','admin','admin');
-
 
 
 
